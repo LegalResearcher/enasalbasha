@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { ImageIcon } from "lucide-react";
 
 export function GallerySection() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -19,7 +20,7 @@ export function GallerySection() {
     },
   });
 
-  // Autoplay
+  // Autoplay functionality
   useEffect(() => {
     if (!gallery?.length) return;
     const interval = setInterval(() => {
@@ -30,9 +31,9 @@ export function GallerySection() {
 
   if (isLoading) {
     return (
-      <section id="gallery" className="py-24 bg-muted/30">
+      <section id="gallery" className="py-24 bg-white">
         <div className="container px-4">
-          <div className="aspect-[21/9] bg-muted rounded-3xl animate-pulse" />
+          <div className="aspect-[21/9] bg-gray-100 rounded-3xl animate-pulse" />
         </div>
       </section>
     );
@@ -43,9 +44,10 @@ export function GallerySection() {
   }
 
   return (
-    <section id="gallery" className="py-24 bg-muted/30">
+    <section id="gallery" className="py-24 bg-white relative">
       <div className="container px-4">
-        {/* Section Header */}
+        
+        {/* رأس القسم بتصميم فخم */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -53,20 +55,24 @@ export function GallerySection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="inline-block text-teal font-medium mb-4">
+          <span className="inline-block text-gold font-bold tracking-wider text-sm mb-4 uppercase">
             معرض الصور
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6">
-            جولة في <span className="text-gradient-teal">عيادتنا</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-navy mb-6">
+            جولة في <span className="text-gold relative inline-block">
+              عيادتنا
+              {/* خط زخرفي ذهبي */}
+              <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gold/30 rounded-full w-full"></span>
+            </span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            تعرف على عيادتنا الحديثة والمجهزة بأحدث التقنيات
+          <p className="text-gray-500 max-w-2xl mx-auto text-lg">
+            تعرف على عيادتنا الحديثة والمجهزة بأحدث التقنيات لراحتك وسلامتك
           </p>
         </motion.div>
 
-        {/* Gallery Carousel */}
-        <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-          <div className="aspect-[21/9]">
+        {/* عارض الصور (Carousel) */}
+        <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-gold/20">
+          <div className="aspect-[21/9] relative">
             <AnimatePresence mode="wait">
               <motion.img
                 key={currentIndex}
@@ -79,35 +85,36 @@ export function GallerySection() {
                 transition={{ duration: 0.7 }}
               />
             </AnimatePresence>
+            
+            {/* طبقة تظليل كحلية متدرجة لضمان وضوح النص */}
+            <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/20 to-transparent" />
           </div>
 
-          {/* Overlay Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent" />
-
-          {/* Title */}
+          {/* العنوان فوق الصورة */}
           {gallery[currentIndex].title && (
             <motion.div
               key={`title-${currentIndex}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="absolute bottom-8 right-8"
+              className="absolute bottom-8 right-8 z-10"
             >
-              <h3 className="text-2xl font-bold text-primary-foreground">
+              <h3 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
+                <ImageIcon className="w-6 h-6 text-gold" />
                 {gallery[currentIndex].title}
               </h3>
             </motion.div>
           )}
 
-          {/* Thumbnails */}
-          <div className="absolute bottom-8 left-8 flex gap-2">
+          {/* الصور المصغرة (Thumbnails) */}
+          <div className="absolute bottom-8 left-8 flex gap-2 z-10">
             {gallery.map((item, index) => (
               <button
                 key={item.id}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-16 h-10 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                className={`w-16 h-12 rounded-lg overflow-hidden border-2 transition-all duration-300 shadow-lg ${
                   index === currentIndex
-                    ? "border-gold scale-110"
-                    : "border-transparent opacity-60 hover:opacity-100"
+                    ? "border-gold scale-110 opacity-100 ring-2 ring-gold/30"
+                    : "border-white/20 opacity-60 hover:opacity-100 hover:border-white"
                 }`}
               >
                 <img
@@ -123,3 +130,4 @@ export function GallerySection() {
     </section>
   );
 }
+
