@@ -20,7 +20,6 @@ export function ContactSection() {
             تواصل معنا
           </motion.span>
           
-          {/* هنا كان الخطأ، تم التصحيح بإغلاق الوسم بشكل صحيح */}
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -69,7 +68,12 @@ export function ContactSection() {
             </div>
             <h3 className="text-xl font-bold text-white mb-3">اتصل بنا</h3>
             
-            <a href="tel:774883898" className="text-2xl font-bold text-gold hover:text-white transition-colors dir-ltr block mb-4">
+            {/* تم التصحيح: إضافة dir="ltr" لضمان ظهور الرقم بشكل صحيح */}
+            <a 
+              href="tel:774883898" 
+              dir="ltr" 
+              className="text-2xl font-bold text-gold hover:text-white transition-colors block mb-4"
+            >
               774 883 898
             </a>
             
@@ -117,7 +121,7 @@ export function ContactSection() {
 
         </div>
 
-        {/* خريطة جوجل */}
+        {/* خريطة جوجل - تم تحديث الرابط */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -126,7 +130,7 @@ export function ContactSection() {
         >
             <div className="absolute inset-0 bg-navy/20 pointer-events-none group-hover:bg-transparent transition-colors duration-500 z-10" />
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3848.468200673415!2d44.223896!3d15.295287!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTXCsDE3JzQzLjAiTiA0NMKwMTMnMjYuMCJF!5e0!3m2!1sar!2s!4v1650000000000!5m2!1sar!2s"
+              src="https://maps.app.goo.gl/jeFxJmAdd86LGFxP6"
               width="100%" 
               height="100%" 
               style={{ border: 0, filter: 'grayscale(10%) contrast(1.1)' }} 
