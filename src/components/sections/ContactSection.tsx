@@ -9,6 +9,11 @@ const WhatsAppIcon = () => (
 );
 
 export function ContactSection() {
+  // نص الرسالة الاحترافية الجاهزة (نفس القالب المستخدم في Navbar)
+  const whatsappMessage = encodeURIComponent(
+    "السلام عليكم ورحمة الله،\nتواصلت معكم عبر الموقع الإلكتروني لعيادة د. إيناس الباشا.\nأرغب في الاستفسار عن حجز موعد."
+  );
+
   return (
     <section id="contact" className="py-24 bg-navy relative overflow-hidden border-t border-white/5">
       {/* عناصر خلفية جمالية */}
@@ -108,9 +113,9 @@ export function ContactSection() {
             
             <div className="flex justify-center gap-4">
               
-              {/* واتساب - أيقونة أصلية */}
+              {/* واتساب - تم إضافة القالب الاحترافي هنا */}
               <a 
-                href="https://wa.me/967774883898" 
+                href={`https://wa.me/967774883898?text=${whatsappMessage}`} 
                 target="_blank" 
                 rel="noreferrer" 
                 className="w-12 h-12 rounded-xl bg-[#25D366] text-white hover:bg-[#20bd5a] hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-lg"
@@ -144,7 +149,7 @@ export function ContactSection() {
 
         </div>
 
-        {/* خريطة جوجل - رابط دقيق لصيدلية ابن حيان 17/العيادة */}
+        {/* خريطة جوجل */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
