@@ -3,8 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2, Loader2, Save, X, Eye, EyeOff } from "lucide-react";
+import { Plus, Trash2, Loader2, Save, Eye, EyeOff } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 type GalleryItem = {
   id: string;
@@ -46,7 +47,7 @@ export default function GalleryTab() {
 
   const handleSave = async () => {
     if (!form.image_url.trim()) {
-      toast({ title: "يرجى إدخال رابط الصورة", variant: "destructive" });
+      toast({ title: "يرجى رفع صورة", variant: "destructive" });
       return;
     }
 
@@ -168,13 +169,11 @@ export default function GalleryTab() {
               />
             </div>
             <div>
-              <label className="block text-gold/80 mb-2 text-sm">رابط الصورة *</label>
-              <Input
+              <label className="block text-gold/80 mb-2 text-sm">الصورة *</label>
+              <ImageUpload
                 value={form.image_url}
-                onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-                className="bg-navy-dark border-gold/20 text-gold"
-                placeholder="https://..."
-                dir="ltr"
+                onChange={(url) => setForm({ ...form, image_url: url })}
+                folder="gallery"
               />
             </div>
             <div className="flex gap-3 pt-4">

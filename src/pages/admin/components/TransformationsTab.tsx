@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Edit2, Trash2, Loader2, Save, X, GripVertical, Eye, EyeOff } from "lucide-react";
+import { Plus, Edit2, Trash2, Loader2, Save, Eye, EyeOff } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 type Transformation = {
   id: string;
@@ -230,7 +231,7 @@ export default function TransformationsTab() {
       )}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="bg-navy border-gold/20">
+        <DialogContent className="bg-navy border-gold/20 max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-gold">
               {editingItem ? "تعديل التحول" : "إضافة تحول جديد"}
@@ -254,25 +255,23 @@ export default function TransformationsTab() {
                 rows={2}
               />
             </div>
-            <div>
-              <label className="block text-gold/80 mb-2 text-sm">رابط صورة قبل *</label>
-              <Input
-                value={form.before_image}
-                onChange={(e) => setForm({ ...form, before_image: e.target.value })}
-                className="bg-navy-dark border-gold/20 text-gold"
-                placeholder="https://..."
-                dir="ltr"
-              />
-            </div>
-            <div>
-              <label className="block text-gold/80 mb-2 text-sm">رابط صورة بعد *</label>
-              <Input
-                value={form.after_image}
-                onChange={(e) => setForm({ ...form, after_image: e.target.value })}
-                className="bg-navy-dark border-gold/20 text-gold"
-                placeholder="https://..."
-                dir="ltr"
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gold/80 mb-2 text-sm">صورة قبل *</label>
+                <ImageUpload
+                  value={form.before_image}
+                  onChange={(url) => setForm({ ...form, before_image: url })}
+                  folder="transformations"
+                />
+              </div>
+              <div>
+                <label className="block text-gold/80 mb-2 text-sm">صورة بعد *</label>
+                <ImageUpload
+                  value={form.after_image}
+                  onChange={(url) => setForm({ ...form, after_image: url })}
+                  folder="transformations"
+                />
+              </div>
             </div>
             <div className="flex gap-3 pt-4">
               <Button onClick={handleSave} variant="hero" disabled={isSaving} className="flex-1">

@@ -1,8 +1,4 @@
-import { Heart } from "lucide-react";
-
 export function Footer() {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer className="bg-navy py-8 border-t border-gold/10">
       <div className="container px-4">
@@ -19,11 +15,12 @@ export function Footer() {
           </div>
 
           {/* Copyright */}
-          <p className="text-gold/50 text-sm flex items-center gap-1">
-            جميع الحقوق محفوظة © {currentYear} - صُنع بـ
-            <Heart className="w-4 h-4 text-destructive fill-destructive" />
-            في اليمن
-          </p>
+          <div className="text-center md:text-right">
+            <p className="text-gold/70 text-sm">
+              © 2025 الناصر تِك للحلول الرقمية (Alnasser Tech Digital Solutions)
+            </p>
+            <p className="text-gold/50 text-xs">جميع الحقوق محفوظة</p>
+          </div>
         </div>
       </div>
     </footer>
