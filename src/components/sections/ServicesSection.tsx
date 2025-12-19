@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// خريطة الأيقونات لربط اسم الأيقونة من قاعدة البيانات بالمكون الفعلي
+// خريطة الأيقونات
 const iconMap: { [key: string]: any } = {
   Sparkles, Heart, Smile, Star, Shield, Crown,
   Stethoscope, Syringe, Scan, Palette, Clock, BadgeCheck,
@@ -44,13 +44,16 @@ export function ServicesSection() {
           <span className="inline-block text-gold font-bold tracking-wider text-sm mb-4 uppercase">
             خدماتنا المتميزة
           </span>
+          
+          {/* هنا كان الخطأ وتم تصحيحه: h2 يفتح ويغلق بـ h2 */}
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-navy mb-6">
             نقدم لك <span className="text-gold relative inline-block">
               أفضل الخدمات
               {/* خط زخرفي بسيط تحت الكلمة */}
               <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gold/30 rounded-full w-full"></span>
             </span>
-          </motion.h2>
+          </h2>
+          
           <p className="text-gray-500 max-w-2xl mx-auto text-lg leading-relaxed">
             خدمات شاملة لصحة وجمال أسنانك بأحدث التقنيات وبأيدي خبيرة
           </p>
@@ -88,7 +91,7 @@ export function ServicesSection() {
                       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold to-gold-light scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                       
                       <div className="relative z-10">
-                        {/* الأيقونة: تم تغيير الألوان لتكون كحلي وذهبي */}
+                        {/* الأيقونة */}
                         <div className="w-16 h-16 rounded-2xl bg-navy/5 group-hover:bg-navy text-navy group-hover:text-gold flex items-center justify-center mb-6 transition-all duration-500 shadow-sm group-hover:shadow-gold/20 transform group-hover:-translate-y-1">
                           <IconComponent className="w-8 h-8 transition-colors duration-500" />
                         </div>
