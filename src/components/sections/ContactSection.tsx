@@ -35,7 +35,10 @@ export function ContactSection() {
 
   const instagramUrl = settings?.instagram || "#";
   const facebookUrl = settings?.facebook || "#";
-  const whatsappNumber = settings?.whatsapp || "967";
+  const whatsappNumber = settings?.whatsapp || "967774883898";
+  const phoneNumber = settings?.phone || "774883898";
+  const address = settings?.address || "صنعاء- جنوب جسر دار سلم-قبل شارع الثلاثين فوق صيدلية ابن حيان الدور الثالث";
+  const workingHours = settings?.working_hours || "السبت - الخميس: 9 صباحاً - 8 مساءً";
 
   return (
     <section id="contact" className="py-24 bg-background">
@@ -76,22 +79,25 @@ export function ContactSection() {
               <div>
                 <h4 className="font-bold text-foreground mb-1">العنوان</h4>
                 <p className="text-muted-foreground">
-                  اليمن - عدن - المنصورة
+                  {address}
                 </p>
               </div>
             </div>
 
-            <div className="bg-card rounded-2xl p-6 border border-border flex items-start gap-4">
+            <a 
+              href={`tel:+967${phoneNumber}`}
+              className="bg-card rounded-2xl p-6 border border-border flex items-start gap-4 hover:border-teal/50 transition-colors block"
+            >
               <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0">
                 <Phone className="w-6 h-6 text-teal" />
               </div>
               <div>
                 <h4 className="font-bold text-foreground mb-1">الهاتف</h4>
                 <p className="text-muted-foreground" dir="ltr">
-                  +967 XXX XXX XXX
+                  +967 {phoneNumber}
                 </p>
               </div>
-            </div>
+            </a>
 
             <div className="bg-card rounded-2xl p-6 border border-border flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0">
@@ -100,7 +106,7 @@ export function ContactSection() {
               <div>
                 <h4 className="font-bold text-foreground mb-1">ساعات العمل</h4>
                 <p className="text-muted-foreground">
-                  السبت - الخميس: 9 صباحاً - 8 مساءً
+                  {workingHours}
                 </p>
               </div>
             </div>

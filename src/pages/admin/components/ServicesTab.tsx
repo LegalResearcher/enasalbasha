@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Edit2, Trash2, Loader2, Save, X, GripVertical, Eye, EyeOff } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 type Service = {
   id: string;
@@ -188,6 +189,9 @@ export default function ServicesTab() {
               className="bg-navy-light/50 border border-gold/10 rounded-xl p-4 flex items-center gap-4"
             >
               <GripVertical className="w-5 h-5 text-gold/30 cursor-grab" />
+              {service.main_image && (
+                <img src={service.main_image} alt={service.title} className="w-12 h-12 object-cover rounded-lg" />
+              )}
               <div className="flex-1">
                 <h3 className="font-bold text-gold">{service.title}</h3>
                 <p className="text-gold/50 text-sm line-clamp-1">{service.description}</p>
@@ -277,13 +281,11 @@ export default function ServicesTab() {
               />
             </div>
             <div>
-              <label className="block text-gold/80 mb-2 text-sm">رابط الصورة الرئيسية</label>
-              <Input
+              <label className="block text-gold/80 mb-2 text-sm">الصورة الرئيسية</label>
+              <ImageUpload
                 value={form.main_image}
-                onChange={(e) => setForm({ ...form, main_image: e.target.value })}
-                className="bg-navy-dark border-gold/20 text-gold"
-                placeholder="https://..."
-                dir="ltr"
+                onChange={(url) => setForm({ ...form, main_image: url })}
+                folder="services"
               />
             </div>
             <div>
