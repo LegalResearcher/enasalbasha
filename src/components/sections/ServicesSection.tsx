@@ -1,28 +1,21 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   Sparkles, Heart, Smile, Star, Shield, Crown, 
-  Stethoscope, Syringe, Scan, Palette, Clock, BadgeCheck 
+  Stethoscope, Syringe, Scan, Palette, Clock, BadgeCheck,
+  ArrowLeft 
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
+// خريطة الأيقونات لربط اسم الأيقونة من قاعدة البيانات بالمكون الفعلي
 const iconMap: { [key: string]: any } = {
-  Sparkles,
-  Heart,
-  Smile,
-  Star,
-  Shield,
-  Crown,
-  Stethoscope,
-  Syringe,
-  Scan,
-  Palette,
-  Clock,
-  BadgeCheck,
+  Sparkles, Heart, Smile, Star, Shield, Crown,
+  Stethoscope, Syringe, Scan, Palette, Clock, BadgeCheck,
 };
 
 export function ServicesSection() {
+  // جلب البيانات من Supabase
   const { data: services, isLoading } = useQuery({
     queryKey: ["services"],
     queryFn: async () => {
@@ -37,9 +30,10 @@ export function ServicesSection() {
   });
 
   return (
-    <section id="services" className="py-24 bg-muted/30">
-      <div className="container px-4">
-        {/* Section Header */}
+    <section id="services" className="py-24 bg-gray-50/50 relative overflow-hidden">
+      <div className="container px-4 relative z-10">
+        
+        {/* رأس القسم */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -47,35 +41,37 @@ export function ServicesSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="inline-block text-teal font-medium mb-4">
+          <span className="inline-block text-gold font-bold tracking-wider text-sm mb-4 uppercase">
             خدماتنا المتميزة
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6">
-            نقدم لك <span className="text-gradient-teal">أفضل الخدمات</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-navy mb-6">
+            نقدم لك <span className="text-gold relative inline-block">
+              أفضل الخدمات
+              {/* خط زخرفي بسيط تحت الكلمة */}
+              <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gold/30 rounded-full w-full"></span>
+            </span>
+          </motion.h2>
+          <p className="text-gray-500 max-w-2xl mx-auto text-lg leading-relaxed">
             خدمات شاملة لصحة وجمال أسنانك بأحدث التقنيات وبأيدي خبيرة
           </p>
         </motion.div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* شبكة الخدمات */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {isLoading
-            ? Array(6)
-                .fill(0)
-                .map((_, i) => (
-                  <div
-                    key={i}
-                    className="bg-card rounded-2xl p-8 animate-pulse"
-                  >
-                    <div className="w-16 h-16 bg-muted rounded-xl mb-6" />
-                    <div className="h-6 bg-muted rounded mb-3 w-3/4" />
-                    <div className="h-4 bg-muted rounded w-full" />
-                    <div className="h-4 bg-muted rounded w-2/3 mt-2" />
-                  </div>
-                ))
-            : services?.map((service, index) => {
+            ? // حالة التحميل (Skeleton)
+              Array(6).fill(0).map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 animate-pulse">
+                  <div className="w-16 h-16 bg-gray-200 rounded-2xl mb-6" />
+                  <div className="h-6 bg-gray-200 rounded mb-3 w-3/4" />
+                  <div className="h-4 bg-gray-200 rounded w-full" />
+                  <div className="h-4 bg-gray-200 rounded w-2/3 mt-2" />
+                </div>
+              ))
+            : // عرض الخدمات الفعلية
+              services?.map((service, index) => {
                 const IconComponent = iconMap[service.icon || "Sparkles"] || Sparkles;
+                
                 return (
                   <motion.div
                     key={service.id}
@@ -86,41 +82,29 @@ export function ServicesSection() {
                   >
                     <Link
                       to={`/services/${service.id}`}
-                      className="group block bg-card rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-500 border border-border hover:border-teal/30 relative overflow-hidden"
+                      className="group block h-full bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-all duration-500 border border-transparent hover:border-gold/20 relative overflow-hidden"
                     >
-                      {/* Hover Gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-teal/5 to-gold/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      {/* تأثير الخلفية عند التحويم */}
+                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold to-gold-light scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                       
                       <div className="relative z-10">
-                        {/* Icon */}
-                        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-teal to-teal-light flex items-center justify-center mb-6 shadow-lg shadow-teal/20 group-hover:scale-110 transition-transform duration-500">
-                          <IconComponent className="w-8 h-8 text-primary-foreground" />
+                        {/* الأيقونة: تم تغيير الألوان لتكون كحلي وذهبي */}
+                        <div className="w-16 h-16 rounded-2xl bg-navy/5 group-hover:bg-navy text-navy group-hover:text-gold flex items-center justify-center mb-6 transition-all duration-500 shadow-sm group-hover:shadow-gold/20 transform group-hover:-translate-y-1">
+                          <IconComponent className="w-8 h-8 transition-colors duration-500" />
                         </div>
 
-                        {/* Content */}
-                        <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-teal transition-colors">
+                        {/* العنوان والنص */}
+                        <h3 className="text-xl font-bold text-navy group-hover:text-gold transition-colors duration-300 mb-3">
                           {service.title}
                         </h3>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <p className="text-gray-500 leading-relaxed mb-6">
                           {service.description}
                         </p>
 
-                        {/* Arrow */}
-                        <div className="mt-6 flex items-center gap-2 text-teal opacity-0 group-hover:opacity-100 transition-opacity">
-                          <span className="text-sm font-medium">اعرف المزيد</span>
-                          <svg
-                            className="w-4 h-4 rotate-180"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M17 8l4 4m0 0l-4 4m4-4H3"
-                            />
-                          </svg>
+                        {/* زر اقرأ المزيد */}
+                        <div className="flex items-center text-sm font-medium text-gold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                          <span>تفاصيل الخدمة</span>
+                          <ArrowLeft className="w-4 h-4 mr-2" />
                         </div>
                       </div>
                     </Link>
@@ -132,3 +116,4 @@ export function ServicesSection() {
     </section>
   );
 }
+
