@@ -17,6 +17,11 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  // نص الرسالة الاحترافية الجاهزة
+  const whatsappMessage = encodeURIComponent(
+    "السلام عليكم ورحمة الله،\nتواصلت معكم عبر الموقع الإلكتروني لعيادة د. إيناس الباشا.\nأرغب في الاستفسار عن حجز موعد."
+  );
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -26,7 +31,6 @@ export function Navbar() {
   }, []);
 
   const scrollToSection = (id: string) => {
-    // إزالة # إذا كانت موجودة لضمان عمل getElementById
     const elementId = id.replace('#', '');
     const element = document.getElementById(elementId);
     if (element) {
@@ -48,14 +52,11 @@ export function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           
-          {/* الشعار - تم تنسيقه ليكون فخماً */}
+          {/* الشعار */}
           <div 
             className="flex items-center gap-2 cursor-pointer" 
             onClick={() => scrollToSection('hero')}
           >
-             {/* إذا كان لديك صورة شعار، يمكنك إزالة التعليق عن السطر التالي */}
-             {/* <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" /> */}
-             
              <div className="flex flex-col">
                <span className="text-2xl font-bold text-white tracking-wide leading-none">
                  ENAS <span className="text-gold">CLINIC</span>
@@ -80,12 +81,12 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* أزرار الإجراءات (حجز واتساب) */}
+          {/* أزرار الإجراءات */}
           <div className="hidden md:flex items-center gap-3">
             
-            {/* زر واتساب (أيقونة فقط للحفاظ على النظافة) */}
+            {/* زر واتساب مع الرسالة الجاهزة */}
             <a 
-              href="https://wa.me/967774883898" 
+              href={`https://wa.me/967774883898?text=${whatsappMessage}`}
               target="_blank" 
               rel="noopener noreferrer"
               className="w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
@@ -94,7 +95,6 @@ export function Navbar() {
               <MessageCircle className="w-5 h-5" />
             </a>
 
-            {/* زر الحجز الرئيسي */}
             <Button
               className="bg-gold hover:bg-gold-light text-navy font-bold rounded-full px-6 shadow-lg shadow-gold/20 hover:shadow-gold/40 transition-all transform hover:-translate-y-0.5"
               onClick={() => scrollToSection("#booking")}
@@ -114,7 +114,7 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* قائمة الجوال المنبثقة */}
+      {/* قائمة الجوال */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -147,8 +147,9 @@ export function Navbar() {
                   احجز موعدك الآن
                 </Button>
                 
+                {/* زر واتساب الجوال مع الرسالة الجاهزة */}
                 <a 
-                  href="https://wa.me/967774883898" 
+                  href={`https://wa.me/967774883898?text=${whatsappMessage}`}
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold h-12 rounded-xl transition-colors"
