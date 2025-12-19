@@ -28,7 +28,7 @@ export function BookingSection() {
     message: "",
   });
 
-  // 1. جلب قائمة الخدمات من قاعدة البيانات (نفس منطق الكود القديم)
+  // 1. جلب قائمة الخدمات من قاعدة البيانات
   const { data: services } = useQuery({
     queryKey: ["services"],
     queryFn: async () => {
@@ -42,17 +42,16 @@ export function BookingSection() {
     },
   });
 
-  // 2. دالة إرسال الحجز (تم تعديلها لتطابق جدول bookings القديم)
+  // 2. دالة إرسال الحجز
   const bookingMutation = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("bookings").insert([
         {
-          patient_name: formData.name,      // تم التصحيح: patient_name بدلاً من full_name
-          phone: formData.phone,            // تم التصحيح: phone بدلاً من phone_number
-          service_id: formData.service_id,  // تم التصحيح: إرسال ID الخدمة
-          preferred_date: formData.date,    // التاريخ
-          notes: formData.message,          // الملاحظات
-          // preferred_time: يمكن إضافته إذا أردت، حالياً نكتفي بالتاريخ في هذا التصميم
+          patient_name: formData.name,
+          phone: formData.phone,
+          service_id: formData.service_id,
+          preferred_date: formData.date,
+          notes: formData.message,
         },
       ]);
       if (error) throw error;
@@ -63,7 +62,6 @@ export function BookingSection() {
         description: "سنتواصل معك قريباً لتأكيد الموعد.",
         className: "bg-navy text-white border-gold",
       });
-      // تصفير النموذج
       setFormData({ name: "", phone: "", service_id: "", date: "", message: "" });
     },
     onError: (error) => {
@@ -119,29 +117,36 @@ export function BookingSection() {
 
             {/* معلومات التواصل السريع */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
-              <div className="flex items-center gap-4 bg-navy-light/50 p-4 rounded-2xl border border-white/5 group cursor-pointer hover:border-gold/30 transition-colors">
+              
+              {/* زر الاتصال المباشر */}
+              <a 
+                href="tel:774883898"
+                className="flex items-center gap-4 bg-navy-light/50 p-4 rounded-2xl border border-white/5 group cursor-pointer hover:border-gold/30 transition-colors"
+              >
                 <div className="w-12 h-12 rounded-full bg-navy flex items-center justify-center border border-gold/20 group-hover:bg-gold group-hover:text-navy transition-colors">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-400 mb-1">اتصل بنا مباشرة</p>
-                  <p className="text-lg font-bold text-white" dir="ltr">777 000 000</p>
+                  <p className="text-lg font-bold text-white" dir="ltr">774 883 898</p>
                 </div>
-              </div>
+              </a>
               
+              {/* ساعات العمل - تم التحديث */}
               <div className="flex items-center gap-4 bg-navy-light/50 p-4 rounded-2xl border border-white/5">
                 <div className="w-12 h-12 rounded-full bg-navy flex items-center justify-center border border-gold/20">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-400 mb-1">ساعات العمل</p>
-                  <p className="text-lg font-bold text-white">9:00 ص - 9:00 م</p>
+                  <p className="text-lg font-bold text-white">9:00 ص - 8:00 م</p>
+                  <p className="text-[10px] text-gold mt-1">الجمعة مغلق</p>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* الجانب الأيسر: نموذج الحجز (بطاقة بيضاء أنيقة) */}
+          {/* الجانب الأيسر: نموذج الحجز */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -201,7 +206,7 @@ export function BookingSection() {
                   </div>
                 </div>
 
-                {/* القائمة المنسدلة للخدمات (ديناميكية من قاعدة البيانات) */}
+                {/* القائمة المنسدلة للخدمات */}
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-navy flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-gold" /> نوع الخدمة
