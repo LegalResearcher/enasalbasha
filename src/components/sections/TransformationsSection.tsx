@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+﻿import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Transformation {
@@ -56,56 +56,64 @@ function BeforeAfterSlider({ transformation }: { transformation: Transformation 
   }, [isDragging, handleMouseMove, handleTouchMove, handleEnd]);
 
   return (
-    <div
-      ref={containerRef}
-      className="relative aspect-[4/3] rounded-2xl overflow-hidden cursor-ew-resize select-none"
-      onMouseDown={(e) => {
-        setIsDragging(true);
-        handleMove(e.clientX);
-      }}
-      onTouchStart={(e) => {
-        setIsDragging(true);
-        handleMove(e.touches[0].clientX);
-      }}
-    >
-      {/* After Image (Background) */}
-      <div className="absolute inset-0">
-        <img
-          src={transformation.after_image || "/placeholder.svg"}
-          alt="بعد"
-          className="w-full h-full object-cover"
-          draggable={false}
-        />
-        <div className="absolute top-4 left-4 bg-teal/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
-          بعد
-        </div>
-      </div>
-
-      {/* Before Image (Foreground with clip) */}
+    <div className="relative group">
+      {/* إطار خارجي ذهبي خفيف يعطي فخامة */}
+      <div className="absolute -inset-1 bg-gradient-to-r from-gold/20 to-navy/20 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
+      
       <div
-        className="absolute inset-0"
-        style={{ clipPath: `inset(0 0 0 ${100 - sliderPosition}%)` }}
+        ref={containerRef}
+        className="relative aspect-[4/3] rounded-2xl overflow-hidden cursor-ew-resize select-none border-2 border-gold/10 shadow-2xl shadow-navy-dark/50"
+        onMouseDown={(e) => {
+          setIsDragging(true);
+          handleMove(e.clientX);
+        }}
+        onTouchStart={(e) => {
+          setIsDragging(true);
+          handleMove(e.touches[0].clientX);
+        }}
       >
-        <img
-          src={transformation.before_image || "/placeholder.svg"}
-          alt="قبل"
-          className="w-full h-full object-cover"
-          draggable={false}
-        />
-        <div className="absolute top-4 right-4 bg-navy/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
-          قبل
+        {/* صورة بعد (الخلفية - النتيجة النهائية) */}
+        <div className="absolute inset-0">
+          <img
+            src={transformation.after_image || "/placeholder.svg"}
+            alt="بعد"
+            className="w-full h-full object-cover"
+            draggable={false}
+          />
+          {/* شارة "بعد" - لون ذهبي فخم */}
+          <div className="absolute top-4 left-4 bg-gold text-navy px-4 py-1.5 rounded-full text-sm font-bold shadow-lg border border-white/20 backdrop-blur-md flex items-center gap-1">
+            <Sparkles className="w-3 h-3" />
+            بعد
+          </div>
         </div>
-      </div>
 
-      {/* Slider Handle */}
-      <div
-        className="absolute top-0 bottom-0 w-1 bg-gold shadow-lg shadow-gold/50"
-        style={{ left: `${sliderPosition}%`, transform: "translateX(-50%)" }}
-      >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-gold shadow-lg shadow-gold/50 flex items-center justify-center">
-          <div className="flex gap-0.5">
-            <ChevronRight className="w-4 h-4 text-navy" />
-            <ChevronLeft className="w-4 h-4 text-navy" />
+        {/* صورة قبل (في الأمام - يتم قصها) */}
+        <div
+          className="absolute inset-0"
+          style={{ clipPath: `inset(0 0 0 ${100 - sliderPosition}%)` }}
+        >
+          <img
+            src={transformation.before_image || "/placeholder.svg"}
+            alt="قبل"
+            className="w-full h-full object-cover filter brightness-90 grayscale-[0.2]" // تغميق بسيط لصورة "قبل" لزيادة التباين
+            draggable={false}
+          />
+          {/* شارة "قبل" - لون كحلي شفاف */}
+          <div className="absolute top-4 right-4 bg-navy/80 text-white px-4 py-1.5 rounded-full text-sm font-medium backdrop-blur-md border border-white/10">
+            قبل
+          </div>
+        </div>
+
+        {/* مقبض السلايدر */}
+        <div
+          className="absolute top-0 bottom-0 w-1 bg-gold shadow-[0_0_10px_rgba(255,215,0,0.5)] z-20"
+          style={{ left: `${sliderPosition}%`, transform: "translateX(-50%)" }}
+        >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-navy border-2 border-gold shadow-xl flex items-center justify-center cursor-grab active:cursor-grabbing">
+            <div className="flex gap-1 text-gold">
+              <ChevronRight className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4" />
+            </div>
           </div>
         </div>
       </div>
@@ -117,6 +125,7 @@ export function TransformationsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
+  // جلب البيانات (كما هي من الكود السابق)
   const { data: transformations, isLoading } = useQuery({
     queryKey: ["transformations"],
     queryFn: async () => {
@@ -131,7 +140,7 @@ export function TransformationsSection() {
     },
   });
 
-  // Autoplay
+  // التنقل التلقائي
   useEffect(() => {
     if (!transformations?.length || isPaused) return;
     const interval = setInterval(() => {
@@ -152,49 +161,44 @@ export function TransformationsSection() {
 
   if (isLoading) {
     return (
-      <section id="transformations" className="py-24 bg-navy">
+      <section className="py-24 bg-navy">
         <div className="container px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="aspect-[4/3] bg-navy-light rounded-2xl animate-pulse" />
-          </div>
+          <div className="max-w-4xl mx-auto h-[500px] bg-navy-light/50 rounded-2xl animate-pulse" />
         </div>
       </section>
     );
   }
 
-  if (!transformations?.length) {
-    return null;
-  }
+  if (!transformations?.length) return null;
 
   return (
     <section id="transformations" className="py-24 bg-navy relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-teal/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
-      </div>
+      {/* خلفية جمالية */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-navy-light/20 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="container px-4 relative z-10">
-        {/* Section Header */}
+        {/* رأس القسم */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="inline-block text-gold font-medium mb-4">
+          <span className="inline-flex items-center gap-2 text-gold font-bold tracking-wider text-sm mb-4 uppercase bg-white/5 px-4 py-1.5 rounded-full border border-gold/10">
+            <Star className="w-3 h-3 fill-gold" />
             نتائج حقيقية
+            <Star className="w-3 h-3 fill-gold" />
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
-            قبل <span className="text-gradient-gold">وبعد</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+            شاهد الفرق <span className="text-gold">بنفسك</span>
           </h2>
-          <p className="text-gold/60 max-w-2xl mx-auto text-lg">
-            شاهد التحولات المذهلة التي أجريناها لمرضانا
+          <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+            صور حقيقية لمرضانا توضح دقة العمل وجودة النتائج
           </p>
         </motion.div>
 
-        {/* Carousel */}
+        {/* السلايدر الرئيسي */}
         <div className="max-w-4xl mx-auto">
           <div
             className="relative"
@@ -206,60 +210,67 @@ export function TransformationsSection() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
                 transition={{ duration: 0.5 }}
               >
                 <BeforeAfterSlider transformation={transformations[currentIndex]} />
                 
-                {/* Title */}
-                {transformations[currentIndex].title && (
-                  <motion.h3
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-center text-xl font-bold text-gold mt-6"
-                  >
-                    {transformations[currentIndex].title}
-                  </motion.h3>
-                )}
-                {transformations[currentIndex].description && (
-                  <p className="text-center text-gold/60 mt-2">
-                    {transformations[currentIndex].description}
-                  </p>
-                )}
+                {/* العنوان والوصف تحت الصورة */}
+                <div className="text-center mt-8">
+                  {transformations[currentIndex].title && (
+                    <motion.h3
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-2xl font-bold text-white mb-2"
+                    >
+                      {transformations[currentIndex].title}
+                    </motion.h3>
+                  )}
+                  {transformations[currentIndex].description && (
+                    <p className="text-gold/80 text-lg">
+                      {transformations[currentIndex].description}
+                    </p>
+                  )}
+                </div>
               </motion.div>
             </AnimatePresence>
 
-            {/* Navigation Arrows */}
-            <Button
-              variant="glass"
-              size="icon"
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20"
-              onClick={goToPrev}
-            >
-              <ChevronRight className="w-5 h-5 text-gold" />
-            </Button>
-            <Button
-              variant="glass"
-              size="icon"
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20"
-              onClick={goToNext}
-            >
-              <ChevronLeft className="w-5 h-5 text-gold" />
-            </Button>
+            {/* أزرار التنقل الجانبية */}
+            <div className="absolute top-1/2 -translate-y-1/2 -left-4 md:-left-12 z-20">
+               <Button
+                variant="outline"
+                size="icon"
+                className="w-12 h-12 rounded-full border-gold/20 bg-navy/50 text-gold hover:bg-gold hover:text-navy backdrop-blur-sm"
+                onClick={goToNext} // زر اليسار للذهاب للتالي (لأن الموقع عربي RTL)
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </Button>
+            </div>
+
+            <div className="absolute top-1/2 -translate-y-1/2 -right-4 md:-right-12 z-20">
+               <Button
+                variant="outline"
+                size="icon"
+                className="w-12 h-12 rounded-full border-gold/20 bg-navy/50 text-gold hover:bg-gold hover:text-navy backdrop-blur-sm"
+                onClick={goToPrev} // زر اليمين للسابق
+              >
+                <ChevronRight className="w-6 h-6" />
+              </Button>
+            </div>
           </div>
 
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-8">
+          {/* نقاط التنقل السفلية */}
+          <div className="flex justify-center gap-2 mt-10">
             {transformations.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                className={`h-1.5 rounded-full transition-all duration-500 ${
                   index === currentIndex
                     ? "bg-gold w-8"
-                    : "bg-gold/30 hover:bg-gold/50"
+                    : "bg-white/20 w-2 hover:bg-white/40"
                 }`}
               />
             ))}
@@ -269,3 +280,4 @@ export function TransformationsSection() {
     </section>
   );
 }
+
