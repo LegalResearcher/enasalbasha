@@ -1,35 +1,34 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+﻿import { useState } from "react";
+import { motion } from "framer-motion";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { 
-  Calendar, Clock, User, Phone, MessageSquare, 
-  ChevronLeft, ChevronRight, Check, Loader2, Sparkles 
+  Calendar, Clock, Phone, User, MessageSquare, 
+  CheckCircle, Loader2, Sparkles 
 } from "lucide-react";
 
-const timeSlots = [
-  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-  "14:00", "14:30", "15:00", "15:30", "16:00", "16:30",
-  "17:00", "17:30", "18:00", "18:30", "19:00", "19:30"
-];
-
 export function BookingSection() {
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    service_id: "",
-    preferred_date: "",
-    preferred_time: "",
-    patient_name: "",
-    phone: "",
-    notes: "",
-  });
-  const [phoneError, setPhoneError] = useState("");
   const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    service_id: "",
+    date: "",
+    message: "",
+  });
 
+  // 1. جلب قائمة الخدمات من قاعدة البيانات (نفس منطق الكود القديم)
   const { data: services } = useQuery({
     queryKey: ["services"],
     queryFn: async () => {
@@ -43,384 +42,222 @@ export function BookingSection() {
     },
   });
 
+  // 2. دالة إرسال الحجز (تم تعديلها لتطابق جدول bookings القديم)
   const bookingMutation = useMutation({
-    mutationFn: async (data: typeof formData) => {
-      const { error } = await supabase.from("bookings").insert([{
-        ...data,
-        service_id: data.service_id || null,
-        preferred_date: data.preferred_date || null,
-      }]);
+    mutationFn: async () => {
+      const { error } = await supabase.from("bookings").insert([
+        {
+          patient_name: formData.name,      // تم التصحيح: patient_name بدلاً من full_name
+          phone: formData.phone,            // تم التصحيح: phone بدلاً من phone_number
+          service_id: formData.service_id,  // تم التصحيح: إرسال ID الخدمة
+          preferred_date: formData.date,    // التاريخ
+          notes: formData.message,          // الملاحظات
+          // preferred_time: يمكن إضافته إذا أردت، حالياً نكتفي بالتاريخ في هذا التصميم
+        },
+      ]);
       if (error) throw error;
     },
     onSuccess: () => {
       toast({
         title: "تم الحجز بنجاح!",
-        description: "سنتواصل معك قريباً لتأكيد الموعد",
+        description: "سنتواصل معك قريباً لتأكيد الموعد.",
+        className: "bg-navy text-white border-gold",
       });
-      setStep(4);
+      // تصفير النموذج
+      setFormData({ name: "", phone: "", service_id: "", date: "", message: "" });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error(error);
       toast({
-        title: "حدث خطأ",
-        description: "يرجى المحاولة مرة أخرى",
         variant: "destructive",
+        title: "حدث خطأ",
+        description: "يرجى المحاولة مرة أخرى أو التأكد من الاتصال.",
       });
     },
   });
 
-  const validatePhone = (phone: string) => {
-    const cleaned = phone.replace(/\D/g, "");
-    if (cleaned.length !== 9) {
-      setPhoneError("رقم الهاتف يجب أن يكون 9 أرقام (مثال: 7XXXXXXXX)");
-      return false;
-    }
-    if (!cleaned.startsWith("7")) {
-      setPhoneError("رقم الهاتف يجب أن يبدأ بـ 7");
-      return false;
-    }
-    setPhoneError("");
-    return true;
-  };
-
-  const handleNext = () => {
-    if (step === 3) {
-      if (!formData.patient_name.trim()) {
-        toast({ title: "يرجى إدخال الاسم", variant: "destructive" });
-        return;
-      }
-      if (!validatePhone(formData.phone)) {
-        return;
-      }
-      bookingMutation.mutate(formData);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.phone) {
+      toast({ title: "يرجى تعبئة البيانات الأساسية", variant: "destructive" });
       return;
     }
-    setStep((prev) => prev + 1);
+    bookingMutation.mutate();
   };
-
-  const handlePrev = () => {
-    setStep((prev) => prev - 1);
-  };
-
-  // Get today's date in YYYY-MM-DD format
-  const today = new Date().toISOString().split("T")[0];
 
   return (
     <section id="booking" className="py-24 bg-navy relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
-      </div>
+      {/* عناصر خلفية جمالية */}
+      <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
+      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-navy-light/50 rounded-full blur-3xl" />
 
       <div className="container px-4 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block text-gold font-medium mb-4">
-            احجز موعدك
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
-            ابدأ رحلتك نحو <span className="text-gradient-gold">ابتسامة مثالية</span>
-          </h2>
-          <p className="text-gold/60 max-w-2xl mx-auto text-lg">
-            احجز موعدك الآن في 3 خطوات بسيطة
-          </p>
-        </motion.div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          {/* الجانب الأيمن: نصوص ترحيبية ومعلومات */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="text-right space-y-8"
+          >
+            <div>
+              <span className="inline-flex items-center gap-2 text-gold font-bold tracking-wider text-sm mb-4 uppercase bg-white/5 px-4 py-1.5 rounded-full border border-gold/10">
+                <Sparkles className="w-3 h-3" />
+                حجز موعد جديد
+              </span>
+              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                ابدأ رحلتك نحو <br />
+                <span className="text-gold">ابتسامة مثالية</span>
+              </h2>
+              <p className="text-gray-300 text-lg leading-relaxed max-w-xl">
+                املأ النموذج البسيط وسنقوم بالتواصل معك لتحديد الموعد الأنسب. 
+                استشارتك الأولى هي الخطوة الأهم نحو الثقة التي تستحقها.
+              </p>
+            </div>
 
-        {/* Booking Form */}
-        <div className="max-w-2xl mx-auto">
-          {/* Progress Steps */}
-          <div className="flex items-center justify-center gap-4 mb-12">
-            {[1, 2, 3].map((s) => (
-              <div key={s} className="flex items-center gap-2">
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
-                    s <= step
-                      ? "bg-gold text-navy"
-                      : "bg-navy-light text-gold/50"
-                  }`}
-                >
-                  {s < step ? <Check className="w-5 h-5" /> : s}
+            {/* معلومات التواصل السريع */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
+              <div className="flex items-center gap-4 bg-navy-light/50 p-4 rounded-2xl border border-white/5 group cursor-pointer hover:border-gold/30 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-navy flex items-center justify-center border border-gold/20 group-hover:bg-gold group-hover:text-navy transition-colors">
+                  <Phone className="w-5 h-5" />
                 </div>
-                {s < 3 && (
-                  <div
-                    className={`w-16 sm:w-24 h-1 rounded-full transition-all duration-300 ${
-                      s < step ? "bg-gold" : "bg-navy-light"
-                    }`}
-                  />
-                )}
+                <div>
+                  <p className="text-xs text-gray-400 mb-1">اتصل بنا مباشرة</p>
+                  <p className="text-lg font-bold text-white" dir="ltr">777 000 000</p>
+                </div>
               </div>
-            ))}
-          </div>
+              
+              <div className="flex items-center gap-4 bg-navy-light/50 p-4 rounded-2xl border border-white/5">
+                <div className="w-12 h-12 rounded-full bg-navy flex items-center justify-center border border-gold/20">
+                  <Clock className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400 mb-1">ساعات العمل</p>
+                  <p className="text-lg font-bold text-white">9:00 ص - 9:00 م</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
 
-          {/* Form Steps */}
-          <div className="bg-navy-light/50 backdrop-blur-xl rounded-3xl p-8 border border-gold/10">
-            <AnimatePresence mode="wait">
-              {/* Step 1: Select Service */}
-              {step === 1 && (
-                <motion.div
-                  key="step1"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  <div className="text-center mb-8">
-                    <Sparkles className="w-12 h-12 text-gold mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-primary-foreground mb-2">
-                      اختر الخدمة
-                    </h3>
-                    <p className="text-gold/60">
-                      اختر الخدمة التي تحتاجها (اختياري)
-                    </p>
+          {/* الجانب الأيسر: نموذج الحجز (بطاقة بيضاء أنيقة) */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-2xl shadow-black/30 relative overflow-hidden border border-white/10">
+              {/* شريط ذهبي علوي */}
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-gold to-gold-light" />
+              
+              <h3 className="text-2xl font-bold text-navy mb-8 flex items-center gap-2">
+                بيانات الحجز
+              </h3>
+              
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* الاسم */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-navy flex items-center gap-2">
+                    <User className="w-4 h-4 text-gold" /> الاسم الكامل
+                  </label>
+                  <Input
+                    required
+                    placeholder="الاسم الثلاثي"
+                    className="bg-gray-50 border-gray-200 focus:border-gold focus:ring-gold/20 h-12 rounded-xl text-navy"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  />
+                </div>
+
+                {/* الهاتف والتاريخ */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-navy flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-gold" /> رقم الهاتف
+                    </label>
+                    <Input
+                      required
+                      type="tel"
+                      placeholder="077xxxxxxx"
+                      className="bg-gray-50 border-gray-200 focus:border-gold focus:ring-gold/20 h-12 rounded-xl text-right text-navy"
+                      dir="rtl"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    />
                   </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <button
-                      onClick={() => setFormData({ ...formData, service_id: "" })}
-                      className={`p-4 rounded-xl border text-right transition-all duration-300 ${
-                        formData.service_id === ""
-                          ? "border-gold bg-gold/10 text-gold"
-                          : "border-gold/20 text-gold/70 hover:border-gold/40"
-                      }`}
-                    >
-                      كشف عام
-                    </button>
-                    {services?.map((service) => (
-                      <button
-                        key={service.id}
-                        onClick={() =>
-                          setFormData({ ...formData, service_id: service.id })
-                        }
-                        className={`p-4 rounded-xl border text-right transition-all duration-300 ${
-                          formData.service_id === service.id
-                            ? "border-gold bg-gold/10 text-gold"
-                            : "border-gold/20 text-gold/70 hover:border-gold/40"
-                        }`}
-                      >
-                        {service.title}
-                      </button>
-                    ))}
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-navy flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-gold" /> التاريخ المفضل
+                    </label>
+                    <Input
+                      type="date"
+                      className="bg-gray-50 border-gray-200 focus:border-gold focus:ring-gold/20 h-12 rounded-xl text-navy"
+                      value={formData.date}
+                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    />
                   </div>
-                </motion.div>
-              )}
+                </div>
 
-              {/* Step 2: Date & Time */}
-              {step === 2 && (
-                <motion.div
-                  key="step2"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  <div className="text-center mb-8">
-                    <Calendar className="w-12 h-12 text-gold mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-primary-foreground mb-2">
-                      اختر الموعد
-                    </h3>
-                    <p className="text-gold/60">
-                      حدد التاريخ والوقت المناسب لك
-                    </p>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-gold mb-2 text-sm">
-                        التاريخ المفضل
-                      </label>
-                      <Input
-                        type="date"
-                        min={today}
-                        value={formData.preferred_date}
-                        onChange={(e) =>
-                          setFormData({ ...formData, preferred_date: e.target.value })
-                        }
-                        className="bg-navy border-gold/20 text-gold"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-gold mb-2 text-sm">
-                        الوقت المفضل
-                      </label>
-                      <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
-                        {timeSlots.map((time) => (
-                          <button
-                            key={time}
-                            onClick={() =>
-                              setFormData({ ...formData, preferred_time: time })
-                            }
-                            className={`p-2 rounded-lg text-sm transition-all duration-300 ${
-                              formData.preferred_time === time
-                                ? "bg-gold text-navy font-bold"
-                                : "bg-navy border border-gold/20 text-gold/70 hover:border-gold/40"
-                            }`}
-                          >
-                            {time}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Step 3: Contact Info */}
-              {step === 3 && (
-                <motion.div
-                  key="step3"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  <div className="text-center mb-8">
-                    <User className="w-12 h-12 text-gold mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-primary-foreground mb-2">
-                      معلومات التواصل
-                    </h3>
-                    <p className="text-gold/60">
-                      أدخل بياناتك للتواصل معك
-                    </p>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-gold mb-2 text-sm">
-                        الاسم الكامل *
-                      </label>
-                      <div className="relative">
-                        <User className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gold/50" />
-                        <Input
-                          value={formData.patient_name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, patient_name: e.target.value })
-                          }
-                          placeholder="أدخل اسمك الكامل"
-                          className="bg-navy border-gold/20 text-gold pr-11"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-gold mb-2 text-sm">
-                        رقم الهاتف * (9 أرقام)
-                      </label>
-                      <div className="relative">
-                        <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gold/50" />
-                        <Input
-                          value={formData.phone}
-                          onChange={(e) => {
-                            const value = e.target.value.replace(/\D/g, "").slice(0, 9);
-                            setFormData({ ...formData, phone: value });
-                            if (value.length === 9) validatePhone(value);
-                          }}
-                          placeholder="7XXXXXXXX"
-                          className="bg-navy border-gold/20 text-gold pr-11 tracking-wider"
-                          dir="ltr"
-                        />
-                      </div>
-                      {phoneError && (
-                        <p className="text-destructive text-sm mt-1">{phoneError}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-gold mb-2 text-sm">
-                        ملاحظات إضافية
-                      </label>
-                      <div className="relative">
-                        <MessageSquare className="absolute right-3 top-3 w-5 h-5 text-gold/50" />
-                        <Textarea
-                          value={formData.notes}
-                          onChange={(e) =>
-                            setFormData({ ...formData, notes: e.target.value })
-                          }
-                          placeholder="أي معلومات إضافية تود إخبارنا بها..."
-                          className="bg-navy border-gold/20 text-gold pr-11 min-h-24"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Step 4: Success */}
-              {step === 4 && (
-                <motion.div
-                  key="step4"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-8"
-                >
-                  <div className="w-20 h-20 mx-auto rounded-full bg-teal flex items-center justify-center mb-6">
-                    <Check className="w-10 h-10 text-primary-foreground" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-primary-foreground mb-4">
-                    تم الحجز بنجاح!
-                  </h3>
-                  <p className="text-gold/60 mb-8">
-                    شكراً لك، سنتواصل معك قريباً لتأكيد الموعد
-                  </p>
-                  <Button
-                    variant="hero"
-                    onClick={() => {
-                      setStep(1);
-                      setFormData({
-                        service_id: "",
-                        preferred_date: "",
-                        preferred_time: "",
-                        patient_name: "",
-                        phone: "",
-                        notes: "",
-                      });
-                    }}
+                {/* القائمة المنسدلة للخدمات (ديناميكية من قاعدة البيانات) */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-navy flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-gold" /> نوع الخدمة
+                  </label>
+                  <Select
+                    value={formData.service_id}
+                    onValueChange={(value) => setFormData({ ...formData, service_id: value })}
                   >
-                    حجز موعد جديد
-                  </Button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                    <SelectTrigger className="bg-gray-50 border-gray-200 focus:border-gold focus:ring-gold/20 h-12 rounded-xl text-navy">
+                      <SelectValue placeholder="اختر الخدمة المطلوبة" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      {services?.map((service) => (
+                        <SelectItem key={service.id} value={service.id}>
+                          {service.title}
+                        </SelectItem>
+                      ))}
+                      {!services && <SelectItem value="general">كشف عام</SelectItem>}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-            {/* Navigation Buttons */}
-            {step < 4 && (
-              <div className="flex justify-between mt-8 pt-6 border-t border-gold/10">
+                {/* الملاحظات */}
+                <div className="space-y-2">
+                   <label className="text-sm font-bold text-navy flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-gold" /> ملاحظات (اختياري)
+                  </label>
+                  <Textarea
+                    placeholder="أي تفاصيل إضافية؟"
+                    className="bg-gray-50 border-gray-200 focus:border-gold focus:ring-gold/20 rounded-xl text-navy"
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  />
+                </div>
+
+                {/* زر الإرسال */}
                 <Button
-                  variant="ghost"
-                  onClick={handlePrev}
-                  disabled={step === 1}
-                  className="text-gold hover:text-gold/80"
-                >
-                  <ChevronRight className="w-5 h-5 ml-2" />
-                  السابق
-                </Button>
-                <Button
-                  variant="hero"
-                  onClick={handleNext}
+                  type="submit"
                   disabled={bookingMutation.isPending}
+                  className="w-full bg-navy hover:bg-navy-light text-white font-bold h-14 text-lg rounded-xl shadow-lg shadow-navy/20 hover:shadow-xl transition-all duration-300 mt-6 border border-gold/20"
                 >
                   {bookingMutation.isPending ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : step === 3 ? (
-                    "تأكيد الحجز"
-                  ) : (
                     <>
-                      التالي
-                      <ChevronLeft className="w-5 h-5 mr-2" />
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      جاري الإرسال...
                     </>
+                  ) : (
+                    "تأكيد طلب الحجز"
                   )}
                 </Button>
-              </div>
-            )}
-          </div>
+              </form>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
   );
 }
+
