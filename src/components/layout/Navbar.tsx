@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 const navLinks = [
   { href: "#hero", label: "الرئيسية" },
   { href: "#services", label: "خدماتنا" },
-  { href: "#transformations", label: "قبل وبعد" },
-  { href: "#testimonials", label: "آراء المرضى" },
-  { href: "#faq", label: "الأسئلة الشائعة" },
-  { href: "#booking", label: "احجز موعدك" },
+  { href: "#transformations", label: "قصص نجاح" },
+  { href: "#testimonials", label: "آراء العملاء" },
+  { href: "#gallery", label: "المعرض" },
+  { href: "#faq", label: "الأسئلة" },
+  { href: "#contact", label: "تواصل معنا" },
 ];
 
 export function Navbar() {
@@ -24,8 +25,10 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
+  const scrollToSection = (id: string) => {
+    // إزالة # إذا كانت موجودة لضمان عمل getElementById
+    const elementId = id.replace('#', '');
+    const element = document.getElementById(elementId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
@@ -38,92 +41,89 @@ export function Navbar() {
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled 
-          ? "bg-navy/95 backdrop-blur-xl shadow-lg shadow-navy/20" 
-          : "bg-transparent"
+          ? "bg-navy/95 backdrop-blur-xl shadow-lg shadow-navy/20 border-b border-gold/10 py-2" 
+          : "bg-transparent py-4"
       }`}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo Section - Modified */}
-          <motion.a
-            href="#"
-            className="flex items-center gap-3"
-            whileHover={{ scale: 1.02 }}
+          
+          {/* الشعار - تم تنسيقه ليكون فخماً */}
+          <div 
+            className="flex items-center gap-2 cursor-pointer" 
+            onClick={() => scrollToSection('hero')}
           >
-            {/* تم استبدال الدائرة بصورة الشعار هنا */}
-            <img 
-              src="/logo.png" 
-              alt="شعار د. إيناس الباشا" 
-              className="w-12 h-12 object-contain" 
-            />
-            
-            <div className="hidden sm:block">
-              <h1 className="text-gold font-bold text-lg leading-tight">
-                د. إيناس الباشا
-              </h1>
-              <p className="text-gold/60 text-xs">طب وجراحة الفم والأسنان</p>
-            </div>
-          </motion.a>
+             {/* إذا كان لديك صورة شعار، يمكنك إزالة التعليق عن السطر التالي */}
+             {/* <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" /> */}
+             
+             <div className="flex flex-col">
+               <span className="text-2xl font-bold text-white tracking-wide leading-none">
+                 ENAS <span className="text-gold">CLINIC</span>
+               </span>
+               <span className="text-[10px] text-gray-300 tracking-widest uppercase opacity-80">
+                 DENTAL CARE
+               </span>
+             </div>
+          </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
+          {/* روابط الكمبيوتر */}
+          <div className="hidden lg:flex items-center gap-6 bg-white/5 px-6 py-2 rounded-full border border-white/5 backdrop-blur-sm">
             {navLinks.map((link) => (
               <button
                 key={link.href}
                 onClick={() => scrollToSection(link.href)}
-                className="px-4 py-2 text-gold/80 hover:text-gold transition-colors duration-300 text-sm font-medium relative group"
+                className="text-sm font-medium text-gray-200 hover:text-gold transition-colors duration-300 relative group"
               >
                 {link.label}
-                <span className="absolute bottom-0 right-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full" />
               </button>
             ))}
           </div>
 
-          {/* CTA Buttons */}
+          {/* أزرار الإجراءات (حجز واتساب) */}
           <div className="hidden md:flex items-center gap-3">
+            
+            {/* زر واتساب (أيقونة فقط للحفاظ على النظافة) */}
+            <a 
+              href="https://wa.me/967774883898" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
+              title="تواصل عبر واتساب"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </a>
+
+            {/* زر الحجز الرئيسي */}
             <Button
-              variant="heroOutline"
-              size="sm"
-              className="gap-2"
+              className="bg-gold hover:bg-gold-light text-navy font-bold rounded-full px-6 shadow-lg shadow-gold/20 hover:shadow-gold/40 transition-all transform hover:-translate-y-0.5"
               onClick={() => scrollToSection("#booking")}
             >
-              <Phone className="w-4 h-4" />
-              احجز الآن
-            </Button>
-            <Button
-              variant="whatsapp"
-              size="sm"
-              className="gap-2"
-              asChild
-            >
-              {/* تأكد من وضع رقم هاتفك الصحيح هنا بدلاً من 967 */}
-              <a href="https://wa.me/967" target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="w-4 h-4" />
-                واتساب
-              </a>
+              <Phone className="w-4 h-4 ml-2" />
+              حجز موعد
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* زر قائمة الجوال */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-gold"
+            className="lg:hidden p-2 text-white hover:text-gold transition-colors"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* قائمة الجوال المنبثقة */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
+            animate={{ opacity: 1, height: "100vh" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-navy-dark/98 backdrop-blur-xl border-t border-gold/10"
+            className="lg:hidden fixed inset-0 top-20 bg-navy z-40 overflow-y-auto"
           >
-            <div className="container mx-auto px-4 py-6 space-y-4">
+            <div className="container mx-auto px-4 py-8 space-y-2">
               {navLinks.map((link, index) => (
                 <motion.button
                   key={link.href}
@@ -131,26 +131,31 @@ export function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
                   onClick={() => scrollToSection(link.href)}
-                  className="block w-full text-right py-3 text-gold/80 hover:text-gold border-b border-gold/10 transition-colors"
+                  className="w-full text-right py-4 text-xl font-bold text-white hover:text-gold border-b border-white/5 transition-colors flex justify-between items-center group"
                 >
                   {link.label}
+                  <span className="text-gold opacity-0 group-hover:opacity-100 transition-opacity">←</span>
                 </motion.button>
               ))}
-              <div className="flex flex-col gap-3 pt-4">
+              
+              <div className="flex flex-col gap-4 pt-8 mt-4">
                 <Button
-                  variant="hero"
-                  className="w-full"
+                  className="w-full bg-gold hover:bg-gold-light text-navy font-bold h-12 text-lg rounded-xl"
                   onClick={() => scrollToSection("#booking")}
                 >
-                  <Phone className="w-4 h-4" />
-                  احجز موعدك
+                  <Phone className="w-5 h-5 ml-2" />
+                  احجز موعدك الآن
                 </Button>
-                <Button variant="whatsapp" className="w-full" asChild>
-                  <a href="https://wa.me/967" target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="w-4 h-4" />
+                
+                <a 
+                  href="https://wa.me/967774883898" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold h-12 rounded-xl transition-colors"
+                >
+                    <MessageCircle className="w-5 h-5" />
                     تواصل عبر واتساب
-                  </a>
-                </Button>
+                </a>
               </div>
             </div>
           </motion.div>
