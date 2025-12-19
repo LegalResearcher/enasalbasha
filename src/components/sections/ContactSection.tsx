@@ -1,182 +1,144 @@
-import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { Phone, MapPin, Clock, MessageCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-// Instagram SVG Icon
-const InstagramIcon = () => (
-  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-  </svg>
-);
-
-// Facebook SVG Icon
-const FacebookIcon = () => (
-  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-  </svg>
-);
+﻿import { motion } from "framer-motion";
+import { MapPin, Phone, Clock, Mail, Facebook, Instagram, MessageCircle } from "lucide-react";
 
 export function ContactSection() {
-  const { data: settings } = useQuery({
-    queryKey: ["site_settings"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("site_settings")
-        .select("key, value");
-      if (error) throw error;
-      return data.reduce((acc, item) => {
-        acc[item.key] = item.value;
-        return acc;
-      }, {} as Record<string, string | null>);
-    },
-  });
-
-  const instagramUrl = settings?.instagram || "#";
-  const facebookUrl = settings?.facebook || "#";
-  const whatsappNumber = settings?.whatsapp || "967774883898";
-  const phoneNumber = settings?.phone || "774883898";
-  const address = settings?.address || "صنعاء- جنوب جسر دار سلم-قبل شارع الثلاثين فوق صيدلية ابن حيان الدور الثالث";
-  const workingHours = settings?.working_hours || "السبت - الخميس: 9 صباحاً - 8 مساءً";
-
   return (
-    <section id="contact" className="py-24 bg-background">
-      <div className="container px-4">
-        {/* Section Header */}
-        <motion.div
+    <section id="contact" className="py-24 bg-navy relative overflow-hidden border-t border-white/5">
+      {/* عناصر خلفية جمالية */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-navy-light/20 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2 pointer-events-none" />
+
+      <div className="container px-4 relative z-10">
+        
+        {/* رأس القسم */}
+        <div className="text-center mb-16">
+          <motion.span 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-gold font-bold tracking-wider text-sm mb-3 block uppercase"
+          >
+            تواصل معنا
+          </motion.span>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl md:text-5xl font-bold text-white mb-6"
+          >
+            نحن هنا <span className="text-gold">لمساعدتك</span>
+          </h2>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            تواصل معنا عبر القنوات التالية، فريقنا جاهز للرد على استفساراتك
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* بطاقة العنوان */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="bg-navy-light/30 backdrop-blur-md p-8 rounded-3xl border border-gold/10 hover:border-gold/30 transition-all duration-300 group text-center"
+          >
+            <div className="w-16 h-16 mx-auto bg-navy rounded-full flex items-center justify-center border border-gold/20 mb-6 group-hover:bg-gold group-hover:text-navy transition-colors shadow-lg shadow-gold/5">
+              <MapPin className="w-7 h-7 text-gold group-hover:text-navy" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">العنوان</h3>
+            <p className="text-gray-400 leading-relaxed">
+              صنعاء - جنوب جسر دار سلم<br />
+              قبل شارع الثلاثين<br />
+              فوق صيدلية ابن حيان - الدور الثالث
+            </p>
+          </motion.div>
+
+          {/* بطاقة الهاتف وساعات العمل */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="bg-navy-light/30 backdrop-blur-md p-8 rounded-3xl border border-gold/10 hover:border-gold/30 transition-all duration-300 group text-center"
+          >
+            <div className="w-16 h-16 mx-auto bg-navy rounded-full flex items-center justify-center border border-gold/20 mb-6 group-hover:bg-gold group-hover:text-navy transition-colors shadow-lg shadow-gold/5">
+              <Phone className="w-7 h-7 text-gold group-hover:text-navy" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">اتصل بنا</h3>
+            
+            <a href="tel:774883898" className="text-2xl font-bold text-gold hover:text-white transition-colors dir-ltr block mb-4">
+              774 883 898
+            </a>
+            
+            <div className="pt-4 border-t border-white/10 mt-4">
+              <div className="flex items-center justify-center gap-2 text-gray-400 mb-1">
+                <Clock className="w-4 h-4 text-gold" />
+                <span>ساعات العمل:</span>
+              </div>
+              <p className="text-white font-medium">9:00 صباحاً - 8:00 مساءً</p>
+              <p className="text-xs text-red-400 mt-1 font-bold">الجمعة مغلق</p>
+            </div>
+          </motion.div>
+
+          {/* بطاقة التواصل الاجتماعي */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="bg-navy-light/30 backdrop-blur-md p-8 rounded-3xl border border-gold/10 hover:border-gold/30 transition-all duration-300 group text-center"
+          >
+             <div className="w-16 h-16 mx-auto bg-navy rounded-full flex items-center justify-center border border-gold/20 mb-6 group-hover:bg-gold group-hover:text-navy transition-colors shadow-lg shadow-gold/5">
+              <MessageCircle className="w-7 h-7 text-gold group-hover:text-navy" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-6">تابعنا على</h3>
+            
+            <div className="flex justify-center gap-4">
+              {/* واتساب */}
+              <a href="https://wa.me/967774883898" target="_blank" rel="noreferrer" className="w-12 h-12 rounded-xl bg-white/5 hover:bg-gold hover:text-navy text-gray-300 flex items-center justify-center transition-all duration-300 border border-white/10">
+                <MessageCircle className="w-6 h-6" />
+              </a>
+              {/* فيسبوك */}
+              <a href="#" className="w-12 h-12 rounded-xl bg-white/5 hover:bg-gold hover:text-navy text-gray-300 flex items-center justify-center transition-all duration-300 border border-white/10">
+                <Facebook className="w-6 h-6" />
+              </a>
+              {/* انستقرام */}
+              <a href="#" className="w-12 h-12 rounded-xl bg-white/5 hover:bg-gold hover:text-navy text-gray-300 flex items-center justify-center transition-all duration-300 border border-white/10">
+                <Instagram className="w-6 h-6" />
+              </a>
+            </div>
+            <p className="text-xs text-gray-500 mt-6">
+              تابع أحدث حالاتنا وعروضنا الحصرية
+            </p>
+          </motion.div>
+
+        </div>
+
+        {/* خريطة جوجل (بتصميم داكن ليتناسب مع الموقع) */}
+        <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mt-12 rounded-3xl overflow-hidden border border-gold/20 shadow-2xl h-[350px] relative group"
         >
-          <span className="inline-block text-teal font-medium mb-4">
-            تواصل معنا
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6">
-            نحن هنا <span className="text-gradient-teal">لمساعدتك</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            تواصل معنا عبر أي من القنوات التالية
-          </p>
+            {/* طبقة تظليل تذهب عند مرور الماوس */}
+            <div className="absolute inset-0 bg-navy/20 pointer-events-none group-hover:bg-transparent transition-colors duration-500 z-10" />
+            
+            {/* iframe الخريطة */}
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3848.776634599528!2d44.2259167!3d15.2800556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTXCsDE2JzQ4LjIiTiA0NMKwMTMnMzMuMyJF!5e0!3m2!1sar!2s!4v1718888888888!5m2!1sar!2s"
+              width="100%" 
+              height="100%" 
+              style={{ border: 0, filter: 'grayscale(10%) contrast(1.1)' }} 
+              allowFullScreen={true} 
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="موقع العيادة"
+            ></iframe>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6"
-          >
-            {/* Info Cards */}
-            <div className="bg-card rounded-2xl p-6 border border-border flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0">
-                <MapPin className="w-6 h-6 text-teal" />
-              </div>
-              <div>
-                <h4 className="font-bold text-foreground mb-1">العنوان</h4>
-                <p className="text-muted-foreground">
-                  {address}
-                </p>
-              </div>
-            </div>
-
-            <a 
-              href={`tel:+967${phoneNumber}`}
-              className="bg-card rounded-2xl p-6 border border-border flex items-start gap-4 hover:border-teal/50 transition-colors block"
-            >
-              <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0">
-                <Phone className="w-6 h-6 text-teal" />
-              </div>
-              <div>
-                <h4 className="font-bold text-foreground mb-1">الهاتف</h4>
-                <p className="text-muted-foreground" dir="ltr">
-                  +967 {phoneNumber}
-                </p>
-              </div>
-            </a>
-
-            <div className="bg-card rounded-2xl p-6 border border-border flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0">
-                <Clock className="w-6 h-6 text-teal" />
-              </div>
-              <div>
-                <h4 className="font-bold text-foreground mb-1">ساعات العمل</h4>
-                <p className="text-muted-foreground">
-                  {workingHours}
-                </p>
-              </div>
-            </div>
-
-            {/* Social Links */}
-            <div className="flex gap-4 pt-4">
-              <a
-                href={instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 flex items-center justify-center text-primary-foreground hover:scale-110 transition-transform shadow-lg"
-              >
-                <InstagramIcon />
-              </a>
-              <a
-                href={facebookUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-14 h-14 rounded-xl bg-[#1877F2] flex items-center justify-center text-primary-foreground hover:scale-110 transition-transform shadow-lg"
-              >
-                <FacebookIcon />
-              </a>
-              <a
-                href={`https://wa.me/${whatsappNumber}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-14 h-14 rounded-xl bg-[#25D366] flex items-center justify-center text-primary-foreground hover:scale-110 transition-transform shadow-lg"
-              >
-                <MessageCircle className="w-6 h-6" />
-              </a>
-            </div>
-          </motion.div>
-
-          {/* Map or Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative"
-          >
-            <div className="bg-gradient-to-br from-navy to-navy-light rounded-3xl p-8 h-full min-h-[400px] flex flex-col items-center justify-center text-center">
-              <div className="w-20 h-20 rounded-full bg-gold/20 flex items-center justify-center mb-6">
-                <MessageCircle className="w-10 h-10 text-gold" />
-              </div>
-              <h3 className="text-2xl font-bold text-primary-foreground mb-4">
-                تواصل معنا عبر واتساب
-              </h3>
-              <p className="text-gold/60 mb-8 max-w-sm">
-                للاستفسارات السريعة أو حجز موعد، تواصل معنا مباشرة عبر واتساب
-              </p>
-              <Button
-                variant="whatsapp"
-                size="xl"
-                className="gap-3"
-                asChild
-              >
-                <a
-                  href={`https://wa.me/${whatsappNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <MessageCircle className="w-6 h-6" />
-                  ابدأ المحادثة
-                </a>
-              </Button>
-            </div>
-          </motion.div>
-        </div>
       </div>
     </section>
   );
 }
+
