@@ -1,5 +1,5 @@
 ﻿import { motion } from "framer-motion";
-import { MapPin, Phone, Clock, Mail, Facebook, Instagram, MessageCircle } from "lucide-react";
+import { MapPin, Phone, Clock, Facebook, Instagram, MessageCircle } from "lucide-react";
 
 export function ContactSection() {
   return (
@@ -19,6 +19,8 @@ export function ContactSection() {
           >
             تواصل معنا
           </motion.span>
+          
+          {/* هنا كان الخطأ، تم التصحيح بإغلاق الوسم بشكل صحيح */}
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -26,7 +28,8 @@ export function ContactSection() {
             className="text-3xl md:text-5xl font-bold text-white mb-6"
           >
             نحن هنا <span className="text-gold">لمساعدتك</span>
-          </h2>
+          </motion.h2>
+          
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             تواصل معنا عبر القنوات التالية، فريقنا جاهز للرد على استفساراتك
           </p>
@@ -114,19 +117,16 @@ export function ContactSection() {
 
         </div>
 
-        {/* خريطة جوجل (بتصميم داكن ليتناسب مع الموقع) */}
+        {/* خريطة جوجل */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mt-12 rounded-3xl overflow-hidden border border-gold/20 shadow-2xl h-[350px] relative group"
         >
-            {/* طبقة تظليل تذهب عند مرور الماوس */}
             <div className="absolute inset-0 bg-navy/20 pointer-events-none group-hover:bg-transparent transition-colors duration-500 z-10" />
-            
-            {/* iframe الخريطة */}
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3848.776634599528!2d44.2259167!3d15.2800556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTXCsDE2JzQ4LjIiTiA0NMKwMTMnMzMuMyJF!5e0!3m2!1sar!2s!4v1718888888888!5m2!1sar!2s"
+              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3848.468200673415!2d44.223896!3d15.295287!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTXCsDE3JzQzLjAiTiA0NMKwMTMnMjYuMCJF!5e0!3m2!1sar!2s!4v1650000000000!5m2!1sar!2s"
               width="100%" 
               height="100%" 
               style={{ border: 0, filter: 'grayscale(10%) contrast(1.1)' }} 
