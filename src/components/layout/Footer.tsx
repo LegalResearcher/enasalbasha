@@ -1,13 +1,17 @@
-export function Footer() {
+﻿export function Footer() {
   return (
     <footer className="bg-navy py-8 border-t border-gold/10">
       <div className="container px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Logo */}
+          {/* Logo Section - Modified */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold to-gold-light flex items-center justify-center">
-              <span className="text-navy font-bold">د.إ</span>
-            </div>
+            {/* تم استبدال الدائرة بالصورة هنا */}
+            <img 
+              src="/logo.png" 
+              alt="شعار د. إيناس الباشا" 
+              className="w-10 h-10 object-contain" 
+            />
+            
             <div>
               <h3 className="text-gold font-bold">د. إيناس الباشا</h3>
               <p className="text-gold/50 text-xs">طب وجراحة الفم والأسنان</p>
@@ -26,3 +30,4 @@ export function Footer() {
     </footer>
   );
 }
+
