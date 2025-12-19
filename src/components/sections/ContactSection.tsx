@@ -144,7 +144,7 @@ export function ContactSection() {
 
         </div>
 
-        {/* خريطة جوجل - رابط Embed صحيح يعمل 100% */}
+        {/* خريطة جوجل - تم تحديث الموقع بدقة إلى صيدلية ابن حيان بدار سلم */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -153,7 +153,7 @@ export function ContactSection() {
         >
             <div className="absolute inset-0 bg-navy/20 pointer-events-none group-hover:bg-transparent transition-colors duration-500 z-10" />
             <iframe 
-              src="https://maps.google.com/maps?q=Dar%20Salm%20Bridge%2C%20Sanaa&t=&z=15&ie=UTF8&iwloc=&output=embed"
+              src="https://maps.google.com/maps?q=Ibn+Hayyan+Pharmacy+Dar+Salam+Sanaa&t=&z=15&ie=UTF8&iwloc=&output=embed"
               width="100%" 
               height="100%" 
               style={{ border: 0, filter: 'grayscale(10%) contrast(1.1)' }} 
