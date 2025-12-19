@@ -56,9 +56,9 @@ export function ContactSection() {
             </div>
             <h3 className="text-xl font-bold text-white mb-3">العنوان</h3>
             <p className="text-gray-400 leading-relaxed">
-              صنعاء - جنوب جسر دار سلم<br />
-              قبل شارع الثلاثين<br />
-              فوق صيدلية ابن حيان - الدور الثالث
+              صنعاء - شارع تعز<br />
+              جنوب جسر دار سلم - قبل شارع الثلاثين<br />
+              فوق صيدلية ابن حيان 17 - الدور الثالث
             </p>
           </motion.div>
 
@@ -108,7 +108,7 @@ export function ContactSection() {
             
             <div className="flex justify-center gap-4">
               
-              {/* واتساب - أيقونة أصلية وخلفية خضراء */}
+              {/* واتساب - أيقونة أصلية */}
               <a 
                 href="https://wa.me/967774883898" 
                 target="_blank" 
@@ -127,7 +127,7 @@ export function ContactSection() {
                 <Facebook className="w-6 h-6" />
               </a>
 
-              {/* انستقرام - تم الربط */}
+              {/* انستقرام - الحساب الرسمي */}
               <a 
                 href="https://www.instagram.com/dr_enasalbasha?igsh=dDljZ3BweTM2aXg1" 
                 target="_blank" 
@@ -144,7 +144,7 @@ export function ContactSection() {
 
         </div>
 
-        {/* خريطة جوجل - تم تحديث الموقع بدقة إلى صيدلية ابن حيان بدار سلم */}
+        {/* خريطة جوجل - رابط دقيق لصيدلية ابن حيان 17/العيادة */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -153,7 +153,7 @@ export function ContactSection() {
         >
             <div className="absolute inset-0 bg-navy/20 pointer-events-none group-hover:bg-transparent transition-colors duration-500 z-10" />
             <iframe 
-              src="https://maps.google.com/maps?q=Ibn+Hayyan+Pharmacy+Dar+Salam+Sanaa&t=&z=15&ie=UTF8&iwloc=&output=embed"
+              src="https://maps.google.com/maps?q=15.2693779,44.2489205&hl=ar&z=17&output=embed"
               width="100%" 
               height="100%" 
               style={{ border: 0, filter: 'grayscale(10%) contrast(1.1)' }} 
