@@ -14,15 +14,15 @@ export function HeroSection() {
     >
       {/* الطبقة الشفافة (Overlay):
           توضع فوق الصورة لتغميقها وجعل النص واضحاً.
-          bg-navy/90 = لون كحلي بنسبة شفافية 90% (داكن وفخم)
+          bg-navy/90 = لون كحلي بنسبة شفافية 90%
       */}
       <div className="absolute inset-0 bg-navy/90" />
 
-      {/* المحتوى (النصوص والأزرار) - z-10 ليكون فوق الطبقة الشفافة */}
+      {/* المحتوى (النصوص والأزرار) */}
       <div className="container relative z-10 px-4 pt-20">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           
-          {/* الشعار الصغير أعلى العنوان */}
+          {/* الشعار الصغير أعلى العنوان (تم تعديل النص هنا) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -32,7 +32,7 @@ export function HeroSection() {
             <div className="px-6 py-2 rounded-full border border-gold/30 bg-navy-light/30 backdrop-blur-sm text-gold mb-6">
               <span className="flex items-center gap-2 text-sm font-medium">
                 <Sparkles className="w-4 h-4" />
-                أفضل عيادة أسنان في اليمن
+                التميز في طب وتجميل الأسنان
                 <Sparkles className="w-4 h-4" />
               </span>
             </div>
