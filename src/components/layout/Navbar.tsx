@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -44,15 +44,19 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
+          {/* Logo Section - Modified */}
           <motion.a
             href="#"
             className="flex items-center gap-3"
             whileHover={{ scale: 1.02 }}
           >
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-gold-light flex items-center justify-center shadow-lg shadow-gold/30">
-              <span className="text-navy font-bold text-lg">د.إ</span>
-            </div>
+            {/* تم استبدال الدائرة بصورة الشعار هنا */}
+            <img 
+              src="/logo.png" 
+              alt="شعار د. إيناس الباشا" 
+              className="w-12 h-12 object-contain" 
+            />
+            
             <div className="hidden sm:block">
               <h1 className="text-gold font-bold text-lg leading-tight">
                 د. إيناس الباشا
@@ -92,6 +96,7 @@ export function Navbar() {
               className="gap-2"
               asChild
             >
+              {/* تأكد من وضع رقم هاتفك الصحيح هنا بدلاً من 967 */}
               <a href="https://wa.me/967" target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="w-4 h-4" />
                 واتساب
@@ -154,3 +159,4 @@ export function Navbar() {
     </motion.nav>
   );
 }
+
