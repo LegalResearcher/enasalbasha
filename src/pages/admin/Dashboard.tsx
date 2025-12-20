@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import AdminSidebar from "./components/AdminSidebar";
 import BookingsTab from "./components/BookingsTab";
 import ServicesTab from "./components/ServicesTab";
@@ -16,9 +17,11 @@ type AdminTab = "bookings" | "services" | "transformations" | "gallery" | "testi
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<AdminTab>("bookings");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, isAdmin, isLoading, logout } = useAdmin();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   if (isLoading) {
     return (
@@ -68,8 +71,12 @@ export default function AdminDashboard() {
         setActiveTab={setActiveTab}
         userEmail={user?.email}
         onLogout={logout}
+        isOpen={sidebarOpen}
+        onOpenChange={setSidebarOpen}
       />
-      <main className="mr-64 p-8">{renderTab()}</main>
+      <main className={`${isMobile ? 'pt-20 px-4 pb-6' : 'mr-64 p-8'}`}>
+        {renderTab()}
+      </main>
     </div>
   );
 }
