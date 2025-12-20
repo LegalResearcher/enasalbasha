@@ -1,4 +1,4 @@
-User-agent: Googlebot
+﻿User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
@@ -12,3 +12,7 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# رابط خريطة الموقع لمساعدة المحركات على أرشفة عيادة د. إيناس الباشا
+Sitemap: https://d-enas-albasha.vercel.app/sitemap.xml
+
