@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useBookingNotifications } from "@/hooks/useBookingNotifications";
 import AdminSidebar from "./components/AdminSidebar";
 import BookingsTab from "./components/BookingsTab";
 import ServicesTab from "./components/ServicesTab";
@@ -12,6 +13,7 @@ import TestimonialsTab from "./components/TestimonialsTab";
 import FAQsTab from "./components/FAQsTab";
 import SectionsTab from "./components/SectionsTab";
 import SettingsTab from "./components/SettingsTab";
+import { NotificationToggle } from "@/components/admin/NotificationToggle";
 
 type AdminTab = "bookings" | "services" | "transformations" | "gallery" | "testimonials" | "faqs" | "sections" | "settings";
 
@@ -22,7 +24,9 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const isMobile = useIsMobile();
-
+  
+  // Initialize booking notifications listener
+  useBookingNotifications();
   if (isLoading) {
     return (
       <div className="min-h-screen bg-navy flex items-center justify-center">
@@ -75,6 +79,10 @@ export default function AdminDashboard() {
         onOpenChange={setSidebarOpen}
       />
       <main className={`${isMobile ? 'pt-20 px-4 pb-6' : 'mr-64 p-8'}`}>
+        {/* Notification toggle for admin */}
+        <div className="flex justify-end mb-4">
+          <NotificationToggle />
+        </div>
         {renderTab()}
       </main>
     </div>
