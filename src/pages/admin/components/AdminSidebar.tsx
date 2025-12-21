@@ -3,6 +3,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { 
   LogOut, 
   Calendar, 
+  CalendarDays,
   Sparkles, 
   Image, 
   Settings, 
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-type AdminTab = "bookings" | "services" | "transformations" | "gallery" | "testimonials" | "faqs" | "sections" | "settings";
+type AdminTab = "bookings" | "calendar" | "services" | "transformations" | "gallery" | "testimonials" | "faqs" | "sections" | "settings";
 
 interface AdminSidebarProps {
   activeTab: AdminTab;
@@ -28,6 +29,7 @@ interface AdminSidebarProps {
 
 const menuItems: { id: AdminTab; icon: any; label: string }[] = [
   { id: "bookings", icon: Calendar, label: "الحجوزات" },
+  { id: "calendar", icon: CalendarDays, label: "التقويم" },
   { id: "services", icon: Stethoscope, label: "الخدمات" },
   { id: "transformations", icon: Sparkles, label: "التحولات" },
   { id: "gallery", icon: Image, label: "المعرض" },
