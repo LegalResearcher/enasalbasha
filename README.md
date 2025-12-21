@@ -1,73 +1,47 @@
-# Welcome to your vercel project
+﻿# عيادة د. إيناس الباشا | Dr. Enas Albasha Clinic
 
-## Project info
+الموقع الرسمي لعيادة الدكتورة إيناس الباشا لطب وجراحة الفم والأسنان في صنعاء. يقدم الموقع تعريفاً بالخدمات المتاحة مثل تجميل الأسنان، زراعة الأسنان، وابتسامة هوليوود، بالإضافة إلى معلومات التواصل والحجز.
 
-**URL**: https://d-enas-albasha.vercel.app
+**رابط الموقع:** [https://d-enas-albasha.vercel.app](https://d-enas-albasha.vercel.app)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 📍 عن المشروع
 
-**Use Lovable**
+تم تصميم هذا الموقع ليعكس احترافية العيادة ويسهل وصول المرضى للمعلومات.
+* **الموقع:** صنعاء - جنوب جسر دار سلم.
+* **الميزات:** تصميم متجاوب (Responsive)، سريع التحميل، ويدعم تحسين محركات البحث (SEO) بشكل كامل.
 
-Simply visit the [Lovable Project](https://d-enas-albasha.vercel.app) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠 التقنيات المستخدمة (Technologies)
 
-**Use your preferred IDE**
+تم بناء المشروع باستخدام أحدث تقنيات الويب لضمان السرعة والأداء:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Vite**: بيئة تطوير فائقة السرعة.
+- **TypeScript**: لضمان جودة الكود وتقليل الأخطاء.
+- **React**: لبناء واجهة مستخدم تفاعلية وحديثة.
+- **shadcn-ui**: مكتبة مكونات تصميم أنيقة واحترافية.
+- **Tailwind CSS**: لتنسيق التصميم بمرونة عالية.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 💻 كيفية تشغيل المشروع محلياً (Setup)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+إذا كنت ترغب في التعديل على الكود في جهازك، اتبع الخطوات التالية:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+**المتطلبات:** تأكد من وجود [Node.js](https://nodejs.org/) مثبتاً على جهازك.
 
-# Step 3: Install the necessary dependencies.
+```bash
+# 1. انسخ المستودع (Clone)
+git clone <رابط-مستودع-جيت-هاب-الخاص-بالمشروع>
+
+# 2. ادخل إلى مجلد المشروع
+cd <اسم-المجلد>
+
+# 3. ثبت المكاتب والاعتماديات
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 4. شغّل السيرفر المحلي (للمعانية)
 npm run dev
-```
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://d-enas-albasha.vercel.app) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.vercel.app/features/custom-domain#custom-domain)
