@@ -7,6 +7,7 @@ import { useBookingNotifications } from "@/hooks/useBookingNotifications";
 import AdminSidebar from "./components/AdminSidebar";
 import BookingsTab from "./components/BookingsTab";
 import CalendarTab from "./components/CalendarTab";
+import MessagesTab from "./components/MessagesTab";
 import ServicesTab from "./components/ServicesTab";
 import TransformationsTab from "./components/TransformationsTab";
 import GalleryTab from "./components/GalleryTab";
@@ -16,7 +17,7 @@ import SectionsTab from "./components/SectionsTab";
 import SettingsTab from "./components/SettingsTab";
 import { NotificationToggle } from "@/components/admin/NotificationToggle";
 
-type AdminTab = "bookings" | "calendar" | "services" | "transformations" | "gallery" | "testimonials" | "faqs" | "sections" | "settings";
+type AdminTab = "bookings" | "calendar" | "messages" | "services" | "transformations" | "gallery" | "testimonials" | "faqs" | "sections" | "settings";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<AdminTab>("bookings");
@@ -59,6 +60,7 @@ export default function AdminDashboard() {
     switch (activeTab) {
       case "bookings": return <BookingsTab />;
       case "calendar": return <CalendarTab />;
+      case "messages": return <MessagesTab />;
       case "services": return <ServicesTab />;
       case "transformations": return <TransformationsTab />;
       case "gallery": return <GalleryTab />;
