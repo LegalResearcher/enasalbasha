@@ -34,10 +34,10 @@
 
 ```bash
 # 1. انسخ المستودع (Clone)
-git clone [https://github.com/LegalResearcher/enasalbasha.git](https://github.com/LegalResearcher/enasalbasha.git)
+git clone <رابط-مستودع-جيت-هاب-الخاص-بالمشروع>
 
 # 2. ادخل إلى مجلد المشروع
-cd enasalbasha
+cd <اسم-المجلد>
 
 # 3. ثبت المكاتب والاعتماديات
 npm i
