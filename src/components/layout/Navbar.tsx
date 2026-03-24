@@ -1,163 +1,137 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, MessageCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { href: "#hero", label: "الرئيسية" },
-  { href: "#services", label: "خدماتنا" },
-  { href: "#transformations", label: "قصص نجاح" },
-  { href: "#testimonials", label: "آراء العملاء" },
-  { href: "#gallery", label: "المعرض" },
-  { href: "#faq", label: "الأسئلة" },
-  { href: "#contact", label: "تواصل معنا" },
+  { href: "hero", label: "الرئيسية" },
+  { href: "services", label: "خدماتنا" },
+  { href: "transformations", label: "نتائجنا" },
+  { href: "testimonials", label: "آراء المرضى" },
+  { href: "blog", label: "المقالات" },
+  { href: "contact", label: "تواصل معنا" },
 ];
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  // نص الرسالة الاحترافية الجاهزة
-  const whatsappMessage = encodeURIComponent(
-    "السلام عليكم ورحمة الله،\nتواصلت معكم عبر الموقع الإلكتروني لعيادة د. إيناس الباشا.\nأرغب في الاستفسار عن حجز موعد."
-  );
+  const msg = encodeURIComponent("السلام عليكم،\nأود الاستفسار عن حجز موعد في عيادة د. إيناس الباشا.");
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const fn = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", fn);
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  const scrollToSection = (id: string) => {
-    const elementId = id.replace('#', '');
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setIsOpen(false);
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setOpen(false);
   };
 
   return (
     <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled 
-          ? "bg-navy/95 backdrop-blur-xl shadow-lg shadow-navy/20 border-b border-gold/10 py-2" 
-          : "bg-transparent py-4"
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
+        scrolled
+          ? "bg-[hsl(var(--navy-dark))]/95 backdrop-blur-2xl border-b border-gold/10 py-0"
+          : "bg-transparent py-2"
       }`}
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
-          
-          {/* الشعار */}
-          <div 
-            className="flex items-center gap-2 cursor-pointer" 
-            onClick={() => scrollToSection('hero')}
-          >
-             <div className="flex flex-col">
-               <span className="text-2xl font-bold text-white tracking-wide leading-none">
-                 ENAS <span className="text-gold">CLINIC</span>
-               </span>
-               <span className="text-[10px] text-gray-300 tracking-widest uppercase opacity-80">
-                 DENTAL CARE
-               </span>
-             </div>
-          </div>
 
-          {/* روابط الكمبيوتر */}
-          <div className="hidden lg:flex items-center gap-6 bg-white/5 px-6 py-2 rounded-full border border-white/5 backdrop-blur-sm">
-            {navLinks.map((link) => (
+          {/* Logo */}
+          <button onClick={() => scrollTo("hero")} className="flex flex-col items-start group">
+            <span className="text-xl font-bold tracking-[0.12em] text-white uppercase">
+              Enas <span className="text-gradient-gold">Clinic</span>
+            </span>
+            <span className="text-[9px] tracking-[0.3em] text-gold/50 uppercase mt-0.5">Dental Excellence</span>
+          </button>
+
+          {/* Desktop links */}
+          <div className="hidden lg:flex items-center gap-8">
+            {navLinks.map(link => (
               <button
                 key={link.href}
-                onClick={() => scrollToSection(link.href)}
-                className="text-sm font-medium text-gray-200 hover:text-gold transition-colors duration-300 relative group"
+                onClick={() => scrollTo(link.href)}
+                className="text-[13px] tracking-wide text-white/70 hover:text-gold transition-colors duration-300 relative group"
               >
                 {link.label}
-                <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-0.5 right-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
               </button>
             ))}
           </div>
 
-          {/* أزرار الإجراءات */}
+          {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
-            
-            {/* زر واتساب مع الرسالة الجاهزة */}
-            <a 
-              href={`https://wa.me/967774883898?text=${whatsappMessage}`}
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
-              title="تواصل عبر واتساب"
+            <a
+              href={`https://wa.me/967774883898?text=${msg}`}
+              target="_blank" rel="noopener noreferrer"
+              className="w-9 h-9 rounded-full border border-gold/30 text-gold/70 hover:text-gold hover:border-gold flex items-center justify-center transition-all duration-300"
             >
-              <MessageCircle className="w-5 h-5" />
+              <MessageCircle className="w-4 h-4" />
             </a>
-
-            <Button
-              className="bg-gold hover:bg-gold-light text-navy font-bold rounded-full px-6 shadow-lg shadow-gold/20 hover:shadow-gold/40 transition-all transform hover:-translate-y-0.5"
-              onClick={() => scrollToSection("#booking")}
+            <button
+              onClick={() => scrollTo("booking")}
+              className="flex items-center gap-2 bg-gold hover:bg-gold-light text-navy text-sm font-bold px-5 py-2.5 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-gold/25 hover:-translate-y-0.5"
             >
-              <Phone className="w-4 h-4 ml-2" />
-              حجز موعد
-            </Button>
+              <Phone className="w-3.5 h-3.5" />
+              احجز موعدك
+            </button>
           </div>
 
-          {/* زر قائمة الجوال */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-white hover:text-gold transition-colors"
-          >
-            {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+          {/* Mobile toggle */}
+          <button onClick={() => setOpen(!open)} className="lg:hidden text-white/80 hover:text-gold transition-colors p-2">
+            {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* قائمة الجوال */}
+      {/* Mobile menu */}
       <AnimatePresence>
-        {isOpen && (
+        {open && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "100vh" }}
+            animate={{ opacity: 1, height: "100dvh" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden fixed inset-0 top-20 bg-navy z-40 overflow-y-auto"
+            className="lg:hidden fixed inset-0 top-20 bg-[hsl(var(--navy-dark))] overflow-hidden"
           >
-            <div className="container mx-auto px-4 py-8 space-y-2">
-              {navLinks.map((link, index) => (
+            <div className="container px-6 py-12 flex flex-col gap-1">
+              {navLinks.map((link, i) => (
                 <motion.button
                   key={link.href}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  onClick={() => scrollToSection(link.href)}
-                  className="w-full text-right py-4 text-xl font-bold text-white hover:text-gold border-b border-white/5 transition-colors flex justify-between items-center group"
+                  transition={{ delay: i * 0.06 }}
+                  onClick={() => scrollTo(link.href)}
+                  className="text-right py-4 text-2xl font-light text-white/80 hover:text-gold border-b border-white/5 transition-colors"
                 >
                   {link.label}
-                  <span className="text-gold opacity-0 group-hover:opacity-100 transition-opacity">←</span>
                 </motion.button>
               ))}
-              
-              <div className="flex flex-col gap-4 pt-8 mt-4">
-                <Button
-                  className="w-full bg-gold hover:bg-gold-light text-navy font-bold h-12 text-lg rounded-xl"
-                  onClick={() => scrollToSection("#booking")}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="flex flex-col gap-3 pt-10"
+              >
+                <button
+                  onClick={() => scrollTo("booking")}
+                  className="w-full bg-gold text-navy font-bold h-14 rounded-full text-lg"
                 >
-                  <Phone className="w-5 h-5 ml-2" />
                   احجز موعدك الآن
-                </Button>
-                
-                {/* زر واتساب الجوال مع الرسالة الجاهزة */}
-                <a 
-                  href={`https://wa.me/967774883898?text=${whatsappMessage}`}
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold h-12 rounded-xl transition-colors"
+                </button>
+                <a
+                  href={`https://wa.me/967774883898?text=${msg}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-2 border border-gold/30 text-gold h-14 rounded-full text-base font-medium"
                 >
-                    <MessageCircle className="w-5 h-5" />
-                    تواصل عبر واتساب
+                  <MessageCircle className="w-5 h-5" />
+                  تواصل عبر واتساب
                 </a>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         )}
@@ -165,4 +139,3 @@ export function Navbar() {
     </motion.nav>
   );
 }
-
