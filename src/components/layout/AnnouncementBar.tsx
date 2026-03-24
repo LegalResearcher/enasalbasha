@@ -1,83 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Phone } from "lucide-react";
 
-const announcements = [
-  { text: "🎉 نقبل الآن مرضى جدد — احجز استشارتك المجانية اليوم", cta: "احجز الآن", ctaTarget: "booking" },
-  { text: "✨ عرض خاص هذا الشهر: خصم 20% على تبييض الأسنان", cta: "تفاصيل", ctaTarget: "services" },
-  { text: "📍 العيادة تعمل السبت إلى الخميس من 9 صباحاً حتى 8 مساءً", cta: null, ctaTarget: null },
+const messages = [
+  "✦ نقبل الآن مرضى جدد — استشارتك الأولى مجانية",
+  "✦ عرض هذا الشهر: خصم 20% على تبييض الأسنان",
+  "✦ العيادة مفتوحة السبت – الخميس من 9 ص حتى 8 م",
 ];
 
 export function AnnouncementBar() {
   const [visible, setVisible] = useState(true);
-  const [index, setIndex] = useState(0);
+  const [idx, setIdx] = useState(0);
 
-  const current = announcements[index];
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
+  useEffect(() => {
+    const t = setInterval(() => setIdx(i => (i + 1) % messages.length), 4000);
+    return () => clearInterval(t);
+  }, []);
 
   if (!visible) return null;
-
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ height: "auto", opacity: 1 }}
-        exit={{ height: 0, opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="bg-gradient-to-r from-gold via-yellow-400 to-gold text-navy relative overflow-hidden z-[60]"
-      >
-        <div className="container mx-auto px-4 py-2.5 flex items-center justify-between gap-4">
-          {/* تبديل الإعلان */}
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <Sparkles className="w-3.5 h-3.5 shrink-0" />
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={index}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.3 }}
-                className="text-xs sm:text-sm font-bold truncate"
-              >
-                {current.text}
-              </motion.p>
-            </AnimatePresence>
-          </div>
-
-          <div className="flex items-center gap-3 shrink-0">
-            {current.cta && current.ctaTarget && (
-              <button
-                onClick={() => scrollTo(current.ctaTarget!)}
-                className="text-xs font-black bg-navy text-gold px-3 py-1 rounded-full hover:bg-navy/80 transition-colors whitespace-nowrap"
-              >
-                {current.cta}
-              </button>
-            )}
-
-            {/* أزرار التنقل */}
-            <div className="flex gap-1">
-              {announcements.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setIndex(i)}
-                  className={`w-1.5 h-1.5 rounded-full transition-all ${i === index ? "bg-navy w-4" : "bg-navy/40"}`}
-                />
-              ))}
-            </div>
-
-            <button
-              onClick={() => setVisible(false)}
-              className="p-0.5 hover:opacity-70 transition-opacity"
-              aria-label="إغلاق"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-      </motion.div>
-    </AnimatePresence>
+    <div className="bg-[hsl(var(--navy-dark))] border-b border-gold/20 py-2 px-4 relative overflow-hidden z-[60]">
+      {/* shimmer line */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold/5 to-transparent pointer-events-none" />
+      <div className="container mx-auto flex items-center justify-center gap-6">
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={idx}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.4 }}
+            className="text-xs tracking-[0.15em] text-gold/90 font-medium text-center"
+          >
+            {messages[idx]}
+          </motion.p>
+        </AnimatePresence>
+        <button
+          onClick={() => setVisible(false)}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-gold/40 hover:text-gold transition-colors"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
   );
 }
