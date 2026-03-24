@@ -1,181 +1,127 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Star, ChevronLeft, ChevronRight, Quote, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 export function TestimonialsSection() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [idx, setIdx] = useState(0);
 
   const { data: testimonials, isLoading } = useQuery({
     queryKey: ["testimonials"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("testimonials")
-        .select("*")
-        .eq("is_visible", true)
-        .order("display_order");
+        .from("testimonials").select("*").eq("is_visible", true).order("display_order");
       if (error) throw error;
       return data;
     },
   });
 
-  // التشغيل التلقائي (Autoplay)
   useEffect(() => {
     if (!testimonials?.length) return;
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 6000);
-    return () => clearInterval(interval);
+    const t = setInterval(() => setIdx(p => (p + 1) % testimonials.length), 6000);
+    return () => clearInterval(t);
   }, [testimonials?.length]);
 
-  const goToPrev = () => {
-    if (!testimonials?.length) return;
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+  if (isLoading || !testimonials?.length) return null;
 
-  const goToNext = () => {
-    if (!testimonials?.length) return;
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
-
-  // حالة التحميل (Skeleton)
-  if (isLoading) {
-    return (
-      <section id="testimonials" className="py-24 bg-gray-50">
-        <div className="container px-4">
-          <div className="max-w-3xl mx-auto">
-            <div className="bg-white rounded-3xl p-12 shadow-lg animate-pulse border border-gray-100">
-              <div className="h-24 bg-gray-200 rounded mb-6" />
-              <div className="h-6 bg-gray-200 rounded w-1/3 mx-auto" />
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // في حال لا توجد بيانات
-  if (!testimonials?.length) {
-    return null;
-  }
+  const current = testimonials[idx];
 
   return (
-    <section id="testimonials" className="py-24 bg-gray-50/50 relative overflow-hidden">
-      {/* خلفية زخرفية خفيفة */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-navy/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+    <section id="testimonials" className="py-32 bg-[hsl(var(--navy-dark))] relative overflow-hidden">
+      {/* Decorative large number */}
+      <div className="absolute -top-8 right-8 text-[160px] font-black text-white/[0.02] leading-none select-none pointer-events-none">04</div>
 
-      <div className="container px-4 relative z-10">
-        {/* رأس القسم */}
+      {/* Gold decorative circle */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-gold/5 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-gold/[0.07] pointer-events-none" />
+
+      <div className="container px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="inline-block text-gold font-bold tracking-wider text-sm mb-4 uppercase">
-            آراء مرضانا
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-navy mb-6">
-            ماذا يقولون <span className="text-gold relative inline-block">
-              عنا
-              <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gold/30 rounded-full w-full"></span>
-            </span>
+          <div className="flex items-center gap-3 justify-center mb-5">
+            <div className="gold-line" />
+            <span className="text-gold text-xs tracking-[0.25em] uppercase font-medium">آراء مرضانا</span>
+            <div className="gold-line" />
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black text-white leading-tight">
+            يثقون بنا
           </h2>
-          <p className="text-gray-500 max-w-2xl mx-auto text-lg">
-            نفخر بثقة مرضانا وآرائهم الإيجابية التي تدفعنا دائماً لتقديم الأفضل
-          </p>
         </motion.div>
 
-        {/* صندوق الرأي (Slider Card) */}
-        <div className="max-w-4xl mx-auto relative px-4 sm:px-12">
+        {/* Main quote card */}
+        <div className="max-w-3xl mx-auto relative">
           <AnimatePresence mode="wait">
             <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -10 }}
-              transition={{ duration: 0.4 }}
-              className="bg-white rounded-3xl p-8 sm:p-12 shadow-xl shadow-navy/5 border border-gold/10 relative overflow-hidden"
+              key={idx}
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ duration: 0.5 }}
+              className="relative"
             >
-              {/* خط ذهبي علوي جمالي */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold via-gold-light to-gold" />
+              {/* Large quote mark */}
+              <div className="absolute -top-8 right-0 text-[100px] leading-none text-gold/10 font-serif select-none pointer-events-none">"</div>
 
-              {/* أيقونة الاقتباس الخلفية */}
-              <Quote className="absolute top-8 right-8 w-16 h-16 text-navy/5 rotate-180" />
-
-              {/* النجوم */}
-              <div className="flex justify-center gap-1.5 mb-8 relative z-10">
-                {[...Array(testimonials[currentIndex].rating || 5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-6 h-6 fill-gold text-gold drop-shadow-sm"
-                  />
-                ))}
-              </div>
-
-              {/* نص الرأي */}
-              <p className="text-xl sm:text-2xl text-navy font-medium text-center leading-relaxed mb-10 relative z-10">
-                "{testimonials[currentIndex].review}"
-              </p>
-
-              {/* معلومات الشخص */}
-              <div className="text-center relative z-10 flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-navy to-navy-light flex items-center justify-center mb-4 shadow-lg shadow-navy/20 border-2 border-gold/20">
-                  <span className="text-2xl font-bold text-gold">
-                    {testimonials[currentIndex].name.charAt(0)}
-                  </span>
+              <div className="bg-white/[0.04] border border-white/8 rounded-3xl p-10 md:p-14 backdrop-blur-sm">
+                {/* Stars */}
+                <div className="flex justify-center gap-1 mb-8">
+                  {Array(current.rating || 5).fill(0).map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-gold text-gold" />
+                  ))}
                 </div>
-                <h4 className="text-lg font-bold text-navy">
-                  {testimonials[currentIndex].name}
-                </h4>
-                {/* إذا كان هناك حقل للدور الوظيفي في قاعدة البيانات يمكن إضافته هنا */}
-                <div className="flex items-center gap-1 text-gold/80 text-sm mt-1">
-                  <Sparkles className="w-3 h-3" />
-                  <span>عميل مميز</span>
+
+                {/* Review text */}
+                <p className="text-xl md:text-2xl text-white/80 font-light text-center leading-relaxed mb-10">
+                  {current.review}
+                </p>
+
+                {/* Author */}
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-dark to-gold flex items-center justify-center text-navy font-black text-lg">
+                    {current.name.charAt(0)}
+                  </div>
+                  <div className="text-center">
+                    <p className="text-white font-bold">{current.name}</p>
+                    <p className="text-gold/50 text-sm mt-0.5">مريض العيادة</p>
+                  </div>
                 </div>
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* أزرار التنقل */}
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white border-gold/20 text-navy hover:bg-gold hover:text-white hover:border-gold transition-all duration-300 rounded-full w-12 h-12 hidden sm:flex shadow-md"
-            onClick={goToPrev}
-          >
-            <ChevronRight className="w-6 h-6" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white border-gold/20 text-navy hover:bg-gold hover:text-white hover:border-gold transition-all duration-300 rounded-full w-12 h-12 hidden sm:flex shadow-md"
-            onClick={goToNext}
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </Button>
+          {/* Navigation */}
+          <div className="flex items-center justify-center gap-4 mt-10">
+            <button
+              onClick={() => setIdx(p => (p - 1 + testimonials.length) % testimonials.length)}
+              className="w-10 h-10 rounded-full border border-white/15 text-white/50 hover:border-gold hover:text-gold flex items-center justify-center transition-all duration-300"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
 
-          {/* نقاط التنقل السفلية */}
-          <div className="flex justify-center gap-2 mt-10">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
-                  index === currentIndex
-                    ? "bg-gold w-8"
-                    : "bg-navy/20 w-2 hover:bg-navy/40"
-                }`}
-              />
-            ))}
+            <div className="flex gap-2">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setIdx(i)}
+                  className={`rounded-full transition-all duration-500 ${i === idx ? "bg-gold w-8 h-1.5" : "bg-white/20 w-1.5 h-1.5"}`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={() => setIdx(p => (p + 1) % testimonials.length)}
+              className="w-10 h-10 rounded-full border border-white/15 text-white/50 hover:border-gold hover:text-gold flex items-center justify-center transition-all duration-300"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>
     </section>
   );
 }
-
